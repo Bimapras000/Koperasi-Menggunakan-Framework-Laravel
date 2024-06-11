@@ -11,12 +11,30 @@ use PDF;
 class PetugasController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
        
         $user = User::all();
 
-        return view ('admin.petugas.index', compact('user'));
+        $nama = $request->input('name'); // Mengambil nilai dari input 'name'
+    
+    // if ($nama) {
+    //     $users = User::where('name', 'like', '%'.$nama.'%')->paginate(2);
+    //     if ($users->isEmpty()) {
+    //         return view('admin.anggota.index', compact('users'))
+    //             ->withErrors('Tidak ada data yang sesuai dengan pencarian.');
+    //     }
+    // } else {
+    //     $users = User::paginate(2);
+    // }
+    $users = User::where('jabatan', 'petugas')
+        ->when($nama, function ($query, $nama) {
+            return $query->where('name', 'like', '%' . $nama . '%');
+        })
+        ->paginate(1);
+
+
+        return view ('admin.petugas.index', compact('users'));
     }
 
     public function create()

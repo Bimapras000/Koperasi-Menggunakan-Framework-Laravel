@@ -9,8 +9,8 @@
                                 <h3 class="title-5 m-b-35">Data Anggota</h3>
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
-                                        <form class="form-header" action="" method="POST">
-                                            <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
+                                        <form class="form-header" action="{{ url('admin/anggota') }}" method="GET">
+                                            <input class="au-input au-input--xl search-field" type="text" name="name" id="name" placeholder="Search for datas & reports..." />
                                             <button class="au-btn--submit" type="submit">
                                                 <i class="zmdi zmdi-search"></i>
                                             </button>
@@ -46,8 +46,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @php $no = 1 @endphp
-                                        @foreach ($user as $user)
+                                        @php $no = ($users->currentPage() - 1) * $users->perPage() + 1; @endphp
+                                        @foreach ($users as $user)
                                         @if($user->jabatan === 'anggota')
                                         
                                             <tr class="tr-shadow">
@@ -113,7 +113,8 @@
 
                                     </table>
                                 </div>
-
+                                {{ $users->links('pagination::bootstrap-5') }}
+                                
                                 
     
 

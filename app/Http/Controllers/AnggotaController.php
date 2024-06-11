@@ -12,25 +12,30 @@ use PDF;
 class AnggotaController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
        
-        $user = User::all();
+        $users = User::all();
 
 
-        // $nam = $request->input('nam'); // Mengambil nilai dari input 'judul'
+        $nama = $request->input('name'); // Mengambil nilai dari input 'name'
     
-        // if($nam){ 
-        //     $user = Users::where('name', 'like', '%'.$nam.'%')->paginate(4);
-        //     if ($user->isEmpty()) {
-        //         return view('tampiluser/tampiluser', compact('buku','kategori','penerbit'))
-        //             ->withErrors('Tidak ada buku yang sesuai dengan pencarian.');
-        //     }
-        // } else {
-        //     $buku = Buku::paginate(4);
-        // }
+    // if ($nama) {
+    //     $users = User::where('name', 'like', '%'.$nama.'%')->paginate(2);
+    //     if ($users->isEmpty()) {
+    //         return view('admin.anggota.index', compact('users'))
+    //             ->withErrors('Tidak ada data yang sesuai dengan pencarian.');
+    //     }
+    // } else {
+    //     $users = User::paginate(2);
+    // }
+    $users = User::where('jabatan', 'anggota')
+        ->when($nama, function ($query, $nama) {
+            return $query->where('name', 'like', '%' . $nama . '%');
+        })
+        ->paginate(3);
 
-        return view ('admin.anggota.index', compact('user'));
+        return view ('admin.anggota.index', compact('users'));
     }
 
     public function create()

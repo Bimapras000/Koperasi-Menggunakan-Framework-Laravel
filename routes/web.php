@@ -64,7 +64,7 @@ Route::post('/setor/store',[SetorController::class, 'store'])->name('setor.store
 
 Route::get('/konfirmasi', [SetorController::class, 'indexkonfirmasi']);
 Route::post('/konfirmasi/{id}', [SetorController::class, 'konfirmasi'])->name('setor.konfirmasi');
-Route::post('/admin/tolak/{id}', [SetorController::class, 'tolak'])->name('setor.tolak');
+Route::post('/tolak/{id}', [SetorController::class, 'tolak'])->name('setor.tolak');
 
 Route::get('/admin/riwayat', [SetorController::class, 'riwayat']);
 

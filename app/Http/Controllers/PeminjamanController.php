@@ -10,12 +10,20 @@ use Illuminate\Support\Facades\DB;
 class PeminjamanController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
-        $peminjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
-            ->select('peminjaman.*', 'users.name as nama')
-            ->get();
-        return view('admin.peminjaman.index', compact('peminjaman'));
+        $users = User::all();
+        $nama = $request->input('name');
+        
+        if ($nama) {
+            $peminjaman = Peminjaman::whereHas('user', function ($query) use ($nama) {
+                $query->where('name', 'like', '%'.$nama.'%');
+            })->paginate(4);
+        } else {
+            $peminjaman = Peminjaman::paginate(4);
+        }
+
+        return view('admin.peminjaman.index', compact('peminjaman', 'users'));
     }
 
     public function create()

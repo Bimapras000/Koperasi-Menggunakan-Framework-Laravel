@@ -27,9 +27,11 @@
     <link href="{{asset('admin/vendor/wow/animate.css')}}" rel="stylesheet" media="all">
     <link href="{{asset('admin/vendor/css-hamburgers/hamburgers.min.css')}}" rel="stylesheet" media="all">
     <link href="{{asset('admin/vendor/slick/slick.css')}}" rel="stylesheet" media="all">
-    <link href="{{asset('admin/vendor/select2/select2.min.css')}}" rel="stylesheet" media="all">
+    <!-- <link href="{{asset('admin/vendor/select2/select2.min.css')}}" rel="stylesheet" media="all"> -->
     <link href="{{asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.css')}}" rel="stylesheet" media="all">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
     <!-- Main CSS-->

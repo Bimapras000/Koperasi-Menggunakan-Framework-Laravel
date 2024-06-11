@@ -9,12 +9,19 @@
                                 <h3 class="title-5 m-b-35">Riwayat Setoran</h3>
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
-                                        <form class="form-header" action="" method="POST">
-                                            <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
+                                        <!-- <form class="form-header" action="{{ url('setor') }}" method="GET">
+                                            <input class="au-input au-input--xl search-field" type="text" ame="nama" id="nama" placeholder="Search for datas &amp; reports..." />
+                                            <button class="au-btn--submit" type="submit">
+                                                <i class="zmdi zmdi-search"></i>
+                                            </button>
+                                        </form> -->
+                                        <form class="form-header" action="{{ url('admin/setor') }}" method="GET">
+                                            <input class="au-input au-input--xl search-field" type="text" name="name" id="name" placeholder="Search for datas &amp; reports..." />
                                             <button class="au-btn--submit" type="submit">
                                                 <i class="zmdi zmdi-search"></i>
                                             </button>
                                         </form>
+
                                     </div>
                                     <div class="table-data__tool-right">
                                         <!-- <button class="au-btn au-btn-icon au-btn--green au-btn--small">
@@ -47,7 +54,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @php $no = 1 @endphp
+                                        @php $no = ($setor->currentPage() - 1) * $setor->perPage() + 1; @endphp
                                         @foreach ($setor as $setors)
                                             <tr>
                                                 <td>{{$no++}}</td>
@@ -69,16 +76,20 @@
                                 
                                             @endforeach
                                         </tbody>
+                                        <tfoot>
+                                        
+                                        </tfoot>
                                         
                                     </table>
                                 </div>
-
+                                {{ $setor->links('pagination::bootstrap-5') }}
                                 
     
 
                                 <!-- END DATA TABLE -->
                             </div>
                         </div>
+                        
                         <!-- </div> -->
 <!-- </div> -->
 <div class="modal fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
@@ -92,18 +103,30 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">Nama</label>
-                        <select name=" users_id " id="users_id" class="form-control @error('name') is-invalid @enderror js-select2">
+                        <label for="select">Nama</label>
+                        <select name="name" id="name" class="form-control @error('name') is-invalid @enderror js-select2" >
                             @foreach ($users as $user)
                                 @if ($user->jabatan == 'anggota' || $user->jabatan == 'petugas')
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endif
                             @endforeach
                         </select>
+                        <div class="dropDownSelect2"></div>
                         @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                     <div class="form-group">
@@ -112,10 +135,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Rp</span>
                             </div>
-                            <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" required>
+                            <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" min="50000" required>
                         </div>
                         @error('nominal')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                     <div class="form-group">
@@ -126,6 +151,15 @@
                         @error('jlm_setor')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="total_nominal">Total Nominal</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp</span>
+                            </div>
+                            <input type="text" class="form-control" id="total_nominal" name="total_nominal" readonly>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="tgl_setor">Tanggal Setor</label>

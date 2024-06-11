@@ -13,30 +13,36 @@
         </div>
 
     </div>
+<!-- jQuery -->
+<script src="{{ asset('admin/vendor/jquery-3.2.1.min.js') }}"></script>
 
-    <!-- Jquery JS-->
-    <script src="{{asset('admin/vendor/jquery-3.2.1.min.js')}}"></script>
-    <!-- Bootstrap JS-->
-    <script src="{{asset('admin/vendor/bootstrap-4.1/popper.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/bootstrap-4.1/bootstrap.min.js')}}"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <!-- Vendor JS       -->
-    <script src="{{asset('admin/vendor/slick/slick.min.js')}}">
-    </script>
-    <script src="{{asset('admin/vendor/wow/wow.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/animsition/animsition.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js')}}">
-    </script>
-    <script src="{{asset('admin/vendor/counter-up/jquery.waypoints.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/counter-up/jquery.counterup.min.js')}}">
-    </script>
-    <script src="{{asset('admin/vendor/circle-progress/circle-progress.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
-    <script src="{{asset('admin/vendor/chartjs/Chart.bundle.min.js')}}"></script>
-    <script src="{{asset('admin/vendor/select2/select2.min.js')}}"></script>
+<!-- Bootstrap JS -->
+<script src="{{ asset('admin/vendor/bootstrap-4.1/popper.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
 
-    <!-- Main JS-->
-    <script src="{{asset('admin/js/main.js')}}"></script>
+<!-- Vendor JS -->
+<script src="{{ asset('admin/vendor/slick/slick.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/wow/wow.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/animsition/animsition.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/counter-up/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/counter-up/jquery.counterup.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/circle-progress/circle-progress.min.js') }}"></script>
+<script src="{{ asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+<script src="{{ asset('admin/vendor/chartjs/Chart.bundle.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Main JS -->
+<script src="{{ asset('admin/js/main.js') }}"></script>
+
+<!-- Select2 Initialization -->
+<script>
+
+    $(document).ready(function() {
+    $('.js-select2').select2();
+});
+
+</script>
 
     <script>
 function viewMemberDetails(userId) {
@@ -83,18 +89,32 @@ function viewMemberDetails(userId) {
     });
 </script>
 @endpush -->
+<script>
+    @if ($errors->any())
+        $(document).ready(function(){
+            $('#smallmodal').modal('show');
+        });
+    @endif
+</script>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const nominalInput = document.getElementById('nominal');
+        const jumlahSetorInput = document.getElementById('jlm_setor');
+        const totalNominalInput = document.getElementById('total_nominal');
 
-$(document).ready(function() {
-    $(".js-select2").select2({
-        minimumResultsForSearch: 20,
-        dropdownParent: $(this).parent()
+        function calculateTotalNominal() {
+            const nominal = parseFloat(nominalInput.value) || 0;
+            const jumlahSetor = parseFloat(jumlahSetorInput.value) || 0;
+            const totalNominal = nominal * jumlahSetor;
+            totalNominalInput.value = totalNominal.toFixed(2);
+        }
+
+        nominalInput.addEventListener('input', calculateTotalNominal);
+        jumlahSetorInput.addEventListener('input', calculateTotalNominal);
     });
-});
-
-
 </script>
+
 
 </body>
 

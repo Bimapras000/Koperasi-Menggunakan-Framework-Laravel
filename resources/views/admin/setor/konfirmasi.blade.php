@@ -14,12 +14,14 @@
         <table class="table table-borderless table-striped table-earning">
             <thead>
             <tr>
-            <th>No</th>
+                <th>No</th>
+                <th>Tanggal</th>
                 <th>Nama</th>
                 <th>Nominal</th>
                 <th class="text-right">Jumlah Setor</th>
+                <th class="text-right">Total Nominal</th>
                 <th class="text-right">Jenis Setor</th>
-                <th class="text-right">Tanggal</th>
+                
                 <th class="text-right">Bukti Setoran</th>
                 <th>Aksi</th>
             </tr>
@@ -29,11 +31,13 @@
             @foreach ($setorans as $setoran)
                 <tr>
                     <td>{{ $no++ }}</td>
+                    <td>{{ $setoran->tgl_setor }}</td>
                     <td>{{ $setoran->users->name }}</td>
                     <td>{{ $setoran->nominal }}</td>
                     <td>{{ $setoran->jlm_setor }}</td>
+                    <td>{{ $setoran->total_nominal }}</td>
                     <td>{{ $setoran->jenis_setor }}</td>
-                    <td>{{ $setoran->tgl_setor }}</td>
+                   
                     <td>
                         @if($setoran->bukti_foto)
                             <img src="{{ url('storage/fotos_bukti/' . $setoran->bukti_foto) }}" alt="Bukti Setor" width="100" class="bukti-foto" style="cursor: pointer;">
