@@ -114,6 +114,47 @@ function viewMemberDetails(userId) {
         jumlahSetorInput.addEventListener('input', calculateTotalNominal);
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const nominalInput = document.getElementById('nominal');
+        const tglPinjamanInput = document.getElementById('tgl_pinjaman');
+        const tglPengembalianInput = document.getElementById('tgl_pengembalian');
+        const totalInput = document.getElementById('total');
+
+        function calculateTotal() {
+            const nominal = parseFloat(nominalInput.value) || 0;
+            const tglPinjaman = new Date(tglPinjamanInput.value);
+            const tglPengembalian = new Date(tglPengembalianInput.value);
+
+            if (!isNaN(tglPinjaman) && !isNaN(tglPengembalian)) {
+                const timeDiff = Math.abs(tglPengembalian - tglPinjaman);
+                const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const diffMonths = Math.ceil(diffDays / 30); // Perhitungan kasar jumlah bulan
+
+                const bungaPerBulan = nominal * 0.02;
+                const totalBunga = bungaPerBulan * diffMonths;
+                const total = nominal + totalBunga;
+
+                totalInput.value = total.toFixed(2);
+            }
+        }
+
+        nominalInput.addEventListener('input', calculateTotal);
+        tglPinjamanInput.addEventListener('change', calculateTotal);
+        tglPengembalianInput.addEventListener('change', calculateTotal);
+    });
+</script>
+
+<!-- <script>
+    document.getElementById('select-action').addEventListener('change', function() {
+        var selectedValue = this.value;
+        if (selectedValue === 'pdf') {
+            window.location.href = '{{ url("admin/anggota/anggotaPDF") }}';
+        }
+        // Tambahkan tindakan lain berdasarkan nilai yang dipilih
+    });
+</script> -->
+
 
 
 </body>

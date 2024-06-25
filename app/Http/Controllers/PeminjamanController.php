@@ -6,24 +6,75 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PeminjamanController extends Controller
 {
     //
-    public function index(Request $request)
-    {
-        $users = User::all();
-        $nama = $request->input('name');
+    // public function index(Request $request)
+    // {
+    //     $users = User::all();
+    //     $nama = $request->input('name');
         
-        if ($nama) {
-            $peminjaman = Peminjaman::whereHas('user', function ($query) use ($nama) {
-                $query->where('name', 'like', '%'.$nama.'%');
-            })->paginate(4);
-        } else {
-            $peminjaman = Peminjaman::paginate(4);
-        }
+    //     $pinjaman = Peminjaman::where('konfirmasi', Peminjaman::STATUS_APPROVED)->paginate(10);
+    //     if ($nama) { 
+    //         $peminjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+    //             ->select('peminjaman.*', 'users.name as nama')
+    //             ->where('users.name', 'like', '%'.$nama.'%')
+    //             ->paginate(4);
+    //         if ($peminjaman->isEmpty()) {
+    //             return view('admin.peminjaman.index', compact('peminjaman', 'users'))
+    //                 ->withErrors('Tidak ada data yang sesuai dengan pencarian.');
+    //         }
+    //     } else {
+    //         $peminjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+    //             ->select('peminjaman.*', 'users.name as nama')
+    //             ->paginate(4);
+    //     }
 
-        return view('admin.peminjaman.index', compact('peminjaman', 'users'));
+    //     return view('admin.peminjaman.index', compact('peminjaman', 'users'));
+    // }
+    public function index(Request $request)
+{
+    $users = User::all();
+    $nama = $request->input('name');
+    
+    $query = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+                        ->select('peminjaman.*', 'users.name as nama')
+                        ->where('peminjaman.konfirmasi', Peminjaman::STATUS_APPROVED);
+
+    if ($nama) {
+        $query = $query->where('users.name', 'like', '%' . $nama . '%');
+    }
+
+    $peminjaman = $query->paginate(10);
+
+    if ($peminjaman->isEmpty() && $nama) {
+        return view('admin.peminjaman.index', compact('peminjaman', 'users'))
+                ->withErrors('Tidak ada data yang sesuai dengan pencarian.');
+    }
+
+    return view('admin.peminjaman.index', compact('peminjaman', 'users'));
+}
+
+
+    public function show($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $user = User::findOrFail($peminjaman->users_id);
+
+        // Calculate monthly payment
+        $tanggalPinjaman = new \DateTime($peminjaman->tgl_pinjaman);
+        $tanggalPengembalian = new \DateTime($peminjaman->tgl_pengembalian);
+        $interval = $tanggalPinjaman->diff($tanggalPengembalian);
+        $jumlahBulan = ($interval->y * 12) + $interval->m + ($interval->d > 0 ? 1 : 0);
+
+        $bungaPerBulan = $peminjaman->nominal * 0.02;
+        $totalBunga = $bungaPerBulan * $jumlahBulan;
+        $total = $peminjaman->nominal + $totalBunga;
+        $monthlyPayment = $total / $jumlahBulan;
+
+        return view('admin.peminjaman.show', compact('peminjaman', 'user', 'monthlyPayment'));
     }
 
     public function create()
@@ -35,27 +86,92 @@ class PeminjamanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'alamat' => 'required',
-            'no_tlp' => 'required',
             'keperluan' => 'required',
-            'tgl_peminjaman' => 'required|date',
-            'tgl_pengembalian' => 'required|date|after_or_equal:tgl_peminjaman',
-            'bunga' => 'required|numeric',
-            'users_id' => 'required|exists:users,id'
+            'tgl_pinjaman' => 'required|date',
+            'tgl_pengembalian' => 'required|date|after_or_equal:tgl_pinjaman',
+            
+            'nominal' => 'required|numeric',
+
         ]);
+
+        // Hitung total dengan bunga 2% per bulan
+        // $tanggalPinjaman = new \DateTime($request->tgl_pinjaman);
+        // $tanggalPengembalian = new \DateTime($request->tgl_pengembalian);
+        // $interval = $tanggalPinjaman->diff($tanggalPengembalian);
+        // $jumlahBulan = ($interval->y * 12) + $interval->m + ($interval->d > 0 ? 1 : 0);
+
+        // $bungaPerBulan = $request->nominal * 0.02;
+        // $totalBunga = $bungaPerBulan * $jumlahBulan;
+        // $total = $request->nominal + $totalBunga;
 
         Peminjaman::create([
             'users_id' => $request->users_id,
             'alamat' => $request->alamat,
             'no_tlp' => $request->no_tlp,
             'keperluan' => $request->keperluan,
-            'tgl_peminjaman' => $request->tgl_peminjaman,
+            'nominal' => $request->nominal,
+            'tgl_pinjaman' => $request->tgl_pinjaman,
             'tgl_pengembalian' => $request->tgl_pengembalian,
-            'bunga' => $request->bunga,
-            'konfirmasi' => 0,
+            'bunga' => 2, // Bunga 2% per bulan
+            'total' => $request->total,
+            'konfirmasi' => Peminjaman::STATUS_PENDING, // Set status to pending
+
 
         ]);
 
-        return redirect('admin/peminjaman')->with('success', 'Peminjaman berhasil ditambahkan');
+        return redirect('admin/riwayat')->with('success', 'Peminjaman berhasil ditambahkan');
     }
+
+    public function riwayat(Request $request)
+    {
+        $users = User::all();
+        $nama = $request->input('name');
+        
+        if ($nama) { 
+            $pinjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+                ->select('peminjaman.*', 'users.name as nama')
+                ->where('users.name', 'like', '%'.$nama.'%')
+                ->paginate(4);
+            if ($pinjaman->isEmpty()) {
+                return view('admin.peminjaman.index', compact('peminjaman', 'users'))
+                    ->withErrors('Tidak ada data yang sesuai dengan pencarian.');
+            }
+        } else {
+            $pinjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+                ->select('peminjaman.*', 'users.name as nama')
+                ->paginate(4);
+        }
+
+        return view('admin.peminjaman.riwayat', compact('pinjaman', 'users'));
+    }
+    
+    public function konfirmasiIndex()
+{
+    $pinjaman = Peminjaman::where('konfirmasi', Peminjaman::STATUS_PENDING)->get();
+    return view('admin.peminjaman.konfirmasi', compact('pinjaman'));
+}
+
+public function konfirmasi($id)
+{
+    $pinjaman = Peminjaman::find($id);
+    if ($pinjaman) {
+        $pinjaman->konfirmasi = Peminjaman::STATUS_APPROVED;
+        $pinjaman->save();
+    }
+
+    return redirect('/admin/konfirmasi1')->with('success', 'Peminjaman Berhasil Dikonfirmasi');
+}
+
+public function tolak($id)
+{
+    $pinjaman = Peminjaman::find($id);
+    if ($pinjaman) {
+        $pinjaman->konfirmasi = Peminjaman::STATUS_REJECTED;
+        $pinjaman->save();
+    }
+
+    return redirect('/admin/konfirmasi1')->with('success', 'Peminjaman Berhasil Ditolak');
+}
+
+
 }

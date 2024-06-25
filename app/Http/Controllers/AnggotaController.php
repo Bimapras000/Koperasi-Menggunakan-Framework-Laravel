@@ -214,8 +214,16 @@ class AnggotaController extends Controller
     }
 
     public function anggotaPDF(){
-        $anggota = User::get();
+        // $anggota = User::get();
+        // if ($anggota->isEmpty()) {
+        //     return 'No data found';
+        // }
+        // $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
+        $anggota = User::where('jabatan', 'anggota')->get(); // Mengambil hanya pengguna dengan role 'anggota'
         $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        return $pdf->stream('anggota.pdf');
     }
+
+    
 }

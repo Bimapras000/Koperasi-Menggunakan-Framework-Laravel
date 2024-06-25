@@ -8,7 +8,7 @@
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
-                                <img src="{{asset('admin/images/icon/logo.png')}}" alt="CoolAdmin">
+                                <img src="{{asset('admin/images/icon/logo1.png')}}" alt="CoolAdmin" style="width: 100px; height: auto;">
                             </a>
                         </div>
                         <div class="login-form">
@@ -34,16 +34,13 @@
                                     @enderror
                                 </div>
                                 <br>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">sign in</button>
+                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Masuk</button>
                                 
                             </form>
                             <div class="register-link">
-                                <p>
-                                    Don't you have account?
-                                    <a href="#">Sign Up Here</a>
-                                </p>
+                            
                                 <a class="txt2" href="{{ url('/') }}">
-                                    Back to Home
+                                    Kembali ke Halaman Awal
                                     
                                 </a>
                             </div>

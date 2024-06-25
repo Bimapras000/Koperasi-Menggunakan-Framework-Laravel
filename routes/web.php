@@ -46,6 +46,8 @@ Route::get('/anggota/{id}', [AnggotaController::class, 'show']);
 Route::get('/anggota/edit/{id}',[AnggotaController::class, 'edit']);
 Route::post('/anggota/update/{id}',[AnggotaController::class, 'update']);
 Route::get('/anggota/delete/{id}',[AnggotaController::class, 'destroy']);
+Route::get('/admin/anggota/anggotaPDF', [AnggotaController::class, 'anggotaPDF'])->name('anggota.pdf');
+
 
 //tabel petugas
 Route::get('/petugas',[PetugasController::class, 'index']);
@@ -77,8 +79,15 @@ Route::post('admin/tabungan/tarik/{id}', [TabunganController::class, 'tarikSaldo
 
 //route peminjaman
 Route::get('/peminjaman', [PeminjamanController::class, 'index']);
+Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create']);
-Route::post('/peminjaman', [PeminjamanController::class, 'store']);
+Route::post('/peminjaman/store', [PeminjamanController::class, 'store']);
+Route::get('/riwayat', [PeminjamanController::class, 'riwayat']);
+Route::get('/konfirmasi1', [PeminjamanController::class, 'konfirmasiIndex'])->name('pinjaman.konfirmasiIndex');
+Route::post('/konfirmasi/{id}', [PeminjamanController::class, 'konfirmasi'])->name('pinjaman.konfirmasi');
+Route::post('/tolak/{id}', [PeminjamanController::class, 'tolak'])->name('pinjaman.tolak');
+
+
 
 });
 });

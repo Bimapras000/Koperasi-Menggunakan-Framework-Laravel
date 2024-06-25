@@ -113,11 +113,13 @@
                     </div>
                 @endif
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="form-group ">
                         <label for="select">Nama</label>
-                        <select name="name" id="name" class="form-control @error('name') is-invalid @enderror js-select2" >
+                        <select name="name" id="name" class="js-select2 form-control @error('name') is-invalid @enderror " >
+                            
                             @foreach ($users as $user)
                                 @if ($user->jabatan == 'anggota' || $user->jabatan == 'petugas')
+                                
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endif
                             @endforeach
@@ -187,8 +189,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="submit" class="btn btn-primary">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -235,7 +237,7 @@
                >
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
             </div>
         </div>
     </div>

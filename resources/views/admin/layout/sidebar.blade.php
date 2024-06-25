@@ -49,7 +49,7 @@
                 <div class="container-fluid">
                     <div class="header-mobile-inner">
                         <a class="logo" href="index.html">
-                            <img src="{{asset('admin/images/icon/logo.png')}}" alt="CoolAdmin" />
+                            <img src="{{asset('admin/images/icon/logo2.png')}}" alt="CoolAdmin" />
                         </a>
                         <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -144,7 +144,7 @@
         <aside class="menu-sidebar d-none d-lg-block">
             <div class="logo">
                 <a href="#">
-                    <img src="{{asset('admin/images/icon/logo.png')}}" alt="Cool Admin" />
+                    <img src="{{asset('admin/images/icon/logo3.png')}}" alt="Cool Admin" />
                 </a>
             </div>
             <div class="menu-sidebar__content js-scrollbar1">
@@ -182,10 +182,10 @@
                                     <a href="{{url('/admin/peminjaman')}}">Pinjaman</a>
                                 </li>
                                 <li>
-                                    <a href="index2.html">Konfirmasi Pinjaman</a>
+                                    <a href="{{ route('pinjaman.konfirmasiIndex') }}">Konfirmasi Pinjaman</a>
                                 </li>
                                 <li>
-                                    <a href="index3.html">Riwayat Pinjaman</a>
+                                    <a href="{{url('/admin/riwayat')}}">Riwayat Pinjaman</a>
                                 </li>
                             </ul>
                         </li>

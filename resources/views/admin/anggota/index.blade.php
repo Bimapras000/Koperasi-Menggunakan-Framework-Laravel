@@ -23,14 +23,25 @@
 											Tambah anggota
 										    </button>
 
-                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2 dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Cetak
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{{ route('anggota.pdf') }}">PDF</a>
+                                                    <a class="dropdown-item" href="#">Excel</a>
+                                                    
+                                                </div>
+                                            </div>
+                                            <!-- <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
                                             <select class="js-select2" name="type">
                                                 <option selected="selected">Export</option>
-                                                <option value="">Option 1</option>
+                                                <option value=""><a href="{{url('admin/anggota/anggotaPDF')}}" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a></option>
                                                 <option value="">Option 2</option>
                                             </select>
-                                            <div class="dropDownSelect2"></div>
-                                        </div>
+                                            <div class="dropDownSelect2"></div> -->
+                                        <!-- </div> -->
                                     </div>
                                 </div>
                                 <div class="table-responsive table-responsive-data2">
@@ -241,7 +252,7 @@
                     <label for="viewKtp">Foto KTP</label><br>
                     <img id="viewKtp" class="img-fluid" src="" alt="Foto KTP">
                 </div>
-               >
+               
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
