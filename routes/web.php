@@ -1,13 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\SetorController;
 use App\Http\Controllers\TabunganController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\EksportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,10 +35,20 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 // Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::middleware(['jabatan:anggota'])->group(function () {
+    // Route::resource('user', UserController::class);
+    Route::get('/user/dashboarduser',[UserController::class, 'index']);
+    Route::get('/user/tabunganuser', [UserController::class, 'tabunganIndex'])->name('anggota.tabungan');
+    Route::get('/user/setoruser', [UserController::class, 'setorIndex'])->name('anggota.setor');
+    Route::post('/user/setoruser/store', [UserController::class, 'setor'])->name('anggota.setor.store');
+
+});
+
 Route::group(['middleware' => ['auth', 'jabatan:admin-petugas']], function(){
 Route::prefix('admin')->group(function(){
 
-Route::get('/dashboard',[AdminController::class, 'index']);
+// Route::get('/dashboard',[AdminController::class, 'index']);
+Route::get('/dashboard',[DashboardController::class, 'index']);
 
 //tabel anggota
 Route::get('/anggota',[AnggotaController::class, 'index']);
@@ -79,13 +91,18 @@ Route::post('admin/tabungan/tarik/{id}', [TabunganController::class, 'tarikSaldo
 
 //route peminjaman
 Route::get('/peminjaman', [PeminjamanController::class, 'index']);
-Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
+Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create']);
 Route::post('/peminjaman/store', [PeminjamanController::class, 'store']);
 Route::get('/riwayat', [PeminjamanController::class, 'riwayat']);
 Route::get('/konfirmasi1', [PeminjamanController::class, 'konfirmasiIndex'])->name('pinjaman.konfirmasiIndex');
-Route::post('/konfirmasi/{id}', [PeminjamanController::class, 'konfirmasi'])->name('pinjaman.konfirmasi');
-Route::post('/tolak/{id}', [PeminjamanController::class, 'tolak'])->name('pinjaman.tolak');
+Route::post('/konfirmasi1/{id}', [PeminjamanController::class, 'konfirmasi'])->name('pinjaman.konfirmasi');
+Route::get('/tolak/{id}/alasan', [PeminjamanController::class, 'alasanForm'])->name('pinjaman.tolak.alasan');
+Route::post('/tolak/{id}/process', [PeminjamanController::class, 'processTolak'])->name('pinjaman.tolak.process');
+
+//route eksport
+Route::get('/EksportPDF', [EksportController::class, 'index'])->name('index.pdf');
+Route::get('/export-pdf', [EksportController::class, 'exportPDF'])->name('export.pdf');
 
 
 

@@ -35,7 +35,7 @@ class AuthController extends Controller
                 } elseif (Auth::user()->jabatan == 'petugas') {
                     return redirect('/admin/dashboard');
                 } elseif (Auth::user()->jabatan == 'anggota') {
-                    return redirect('/user');
+                    return redirect('/user/dashboarduser');
                 }
             }
         // }

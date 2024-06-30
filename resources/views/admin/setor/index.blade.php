@@ -30,14 +30,23 @@
 											Tambah Setoran
 										    </button>
 
-                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                            <!-- <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
                                             <select class="js-select2" name="type">
                                                 <option selected="selected">Export</option>
                                                 <option value="">Option 1</option>
                                                 <option value="">Option 2</option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
-                                        </div>
+                                        </div> -->
+                                        
+                                                <div class="col-12 col-md-9 rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                                    <select name="select" id="select" class="">
+                                                        <option selected="selected">Export</option>
+                                                        <option value="">Option 1</option>
+                                                        <option value="">Option 2</option>
+                                                    </select>
+                                                </div>
+                                            
                                     </div>
                                 </div>
                                 <div class="table-responsive table--no-card m-b-40" style="max-height: 450px; overflow-y: auto;">
@@ -47,7 +56,7 @@
                                                 <th>No</th>
                                                 <th>Tanggal</th>
                                                 <th>Nama</th>
-                                                <th class="text-right">Jumlah Setor</th>
+                                                
                                                 <th class="text-right">Nominal</th>
                                                 <th class="text-right">Jenis Setor</th>
                                                 <th class="text-right">Status</th>
@@ -60,9 +69,10 @@
                                                 <td>{{$no++}}</td>
                                                 <td>{{$setors->tgl_setor}}</td>
                                                 <td>{{$setors->nama}}</td>
-                                                <td class="text-right">{{$setors->jlm_setor}}</td>
                                                 <td class="text-right">{{$setors->nominal}}</td>
                                                 <td class="text-right">{{$setors->jenis_setor}}</td>
+                                                
+                                                
                                                 <td class="text-right">
                                                     @if($setors->konfirmasi == \App\Models\Setor::STATUS_APPROVED)
                                                         <span class="badge badge-success">Dikonfirmasi</span>
@@ -145,7 +155,7 @@
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="jlm_setor">Jumlah Setor</label>
                         <div class="input-group">
                             <input type="text" class="form-control @error('jlm_setor') is-invalid @enderror" id="jlm_setor" name="jlm_setor" required>
@@ -153,8 +163,8 @@
                         @error('jlm_setor')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
-                    <div class="form-group">
+                    </div> -->
+                    <!-- <div class="form-group">
                         <label for="total_nominal">Total Nominal</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -162,10 +172,10 @@
                             </div>
                             <input type="text" class="form-control" id="total_nominal" name="total_nominal" readonly>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="tgl_setor">Tanggal Setor</label>
-                        <input type="date" class="form-control @error('tgl_setor') is-invalid @enderror" id="tgl_setor" name="tgl_setor" required>
+                        <input type="date" class="form-control @error('tgl_setor') is-invalid @enderror" id="tgl_setor" name="tgl_setor" required readonly>
                         @error('tgl_setor')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -243,6 +253,17 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var year = today.getFullYear();
+
+        var todayDate = year + '-' + month + '-' + day;
+        document.getElementById('tgl_setor').value = todayDate;
+    });
+</script>
 
 
 @endsection

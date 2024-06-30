@@ -16,7 +16,7 @@ class Setor extends Model
     protected $table = 'setor';
         
         protected $fillable = [
-            'users_id','name','nominal','bukti_foto','tgl_setor','jenis_setor','jlm_setor','konfirmasi'
+            'users_id','name','nominal','bukti_foto','tgl_setor','jenis_setor','konfirmasi'
         ];
         public $timestamps = false;
 
@@ -24,6 +24,9 @@ class Setor extends Model
             return $this->hasMany(Tabungan::class);
         }
         public function users(){
-            return $this->belongsTo(User::class);
+            return $this->belongsTo(User::class, 'users_id');
+        }
+        public function peminjaman(){
+            return $this->belongsTo(Peminjaman::class);
         }
 }

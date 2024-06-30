@@ -114,6 +114,7 @@ class PeminjamanController extends Controller
             'tgl_pengembalian' => $request->tgl_pengembalian,
             'bunga' => 2, // Bunga 2% per bulan
             'total' => $request->total,
+            'status' => 'Belum Lunas',
             'konfirmasi' => Peminjaman::STATUS_PENDING, // Set status to pending
 
 
@@ -147,7 +148,16 @@ class PeminjamanController extends Controller
     
     public function konfirmasiIndex()
 {
-    $pinjaman = Peminjaman::where('konfirmasi', Peminjaman::STATUS_PENDING)->get();
+    // $peminjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+    // ->select('peminjaman.*', 'users.name as nama', 'users.alamat as alamatt','users.no_tlp as tlp')
+    // ->get();
+    // $pinjaman = Peminjaman::where('konfirmasi', Peminjaman::STATUS_PENDING)->get();
+
+    $pinjaman = Peminjaman::join('users', 'users.id', '=', 'peminjaman.users_id')
+    ->select('peminjaman.*', 'users.name as nama', 'users.alamat as alamatt', 'users.no_tlp as tlp')
+    ->where('peminjaman.konfirmasi', Peminjaman::STATUS_PENDING)
+    ->get();
+
     return view('admin.peminjaman.konfirmasi', compact('pinjaman'));
 }
 
@@ -162,16 +172,27 @@ public function konfirmasi($id)
     return redirect('/admin/konfirmasi1')->with('success', 'Peminjaman Berhasil Dikonfirmasi');
 }
 
-public function tolak($id)
+public function processTolak(Request $request, $id)
 {
-    $pinjaman = Peminjaman::find($id);
-    if ($pinjaman) {
-        $pinjaman->konfirmasi = Peminjaman::STATUS_REJECTED;
-        $pinjaman->save();
-    }
+    $request->validate([
+        'alasan' => 'required|string|max:255',
+    ]);
+
+    $pinjaman = Peminjaman::findOrFail($id);
+    $pinjaman->konfirmasi = Peminjaman::STATUS_REJECTED;
+    $pinjaman->alasan = $request->alasan;
+    $pinjaman->save();
 
     return redirect('/admin/konfirmasi1')->with('success', 'Peminjaman Berhasil Ditolak');
 }
+
+
+public function alasanForm($id)
+{
+    $pinjaman = Peminjaman::findOrFail($id); // Ambil data peminjaman berdasarkan ID
+    return view('admin.peminjaman.alasan_tolak', compact('pinjaman'));
+}
+
 
 
 }

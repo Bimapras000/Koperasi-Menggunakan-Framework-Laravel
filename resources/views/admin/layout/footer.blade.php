@@ -145,6 +145,50 @@ function viewMemberDetails(userId) {
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const nominal = document.getElementById('nominal');
+        const jlmSetor = document.getElementById('jlm_setor');
+        const totalNominal = document.getElementById('total_nominal');
+
+        function updateTotalNominal() {
+            const nominalValue = parseFloat(nominal.value) || 0;
+            const jlmSetorValue = parseFloat(jlmSetor.value) || 0;
+            totalNominal.value = nominalValue * jlmSetorValue;
+        }
+
+        nominal.addEventListener('input', updateTotalNominal);
+        jlmSetor.addEventListener('input', updateTotalNominal);
+    });
+</script>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#detailModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+
+            // Fetch data from the server
+            fetch(`/admin/peminjaman/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    var modal = $('#detailModal');
+                    modal.find('.modal-body #viewName').val(data.user.name);
+                    modal.find('.modal-body #viewAlamat').val(data.user.alamat);
+                    modal.find('.modal-body #viewNoTlp').val(data.user.no_tlp);
+                    modal.find('.modal-body #viewKeperluan').val(data.peminjaman.keperluan);
+                    modal.find('.modal-body #viewNominal').val(data.peminjaman.nominal);
+                    modal.find('.modal-body #viewTglPinjaman').val(data.peminjaman.tgl_pinjaman);
+                    modal.find('.modal-body #viewTglPengembalian').val(data.peminjaman.tgl_pengembalian);
+                    modal.find('.modal-body #viewBunga').val(data.peminjaman.bunga);
+                    modal.find('.modal-body #viewTotal').val(data.peminjaman.total);
+                    modal.find('.modal-body #viewPembayaranBulanan').val(data.monthlyPayment);
+                });
+        });
+    });
+</script> -->
+
+
 <!-- <script>
     document.getElementById('select-action').addEventListener('change', function() {
         var selectedValue = this.value;

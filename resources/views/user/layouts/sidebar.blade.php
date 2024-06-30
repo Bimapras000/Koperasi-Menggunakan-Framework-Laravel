@@ -30,32 +30,12 @@
     <!-- <link href="{{asset('admin/vendor/select2/select2.min.css')}}" rel="stylesheet" media="all"> -->
     <link href="{{asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.css')}}" rel="stylesheet" media="all">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
     <!-- Main CSS-->
     <link href="{{asset('admin/css/theme.css')}}" rel="stylesheet" media="all">
-    <style>
-    .status-lunas {
-        background-color: green;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 12px;
-        display: inline-block;
-    }
-
-    .status-belum-lunas {
-        background-color: red;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 12px;
-        display: inline-block;
-    }
-</style>
 
 
 
@@ -179,22 +159,8 @@
                                 <i class="fas fa-chart-bar"></i>Tabungan</a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/anggota') }}">
-                                <i class="fas fa-table"></i>Anggota</a>
-                        </li>
-                        <li>
-                        @if (Auth::user()->jabatan == 'admin')
-                            <a href="{{url('/admin/petugas')}}">
-                                <i class="fas fa-table"></i>Petugas</a>
-                        @endif
-                        </li>
-                        <li>
                             <a href="{{url('/admin/setor')}}">
                                 <i class="fa fa-dollar"></i>Setor</a>
-                        </li>
-                        <li>
-                            <a href="{{url('/admin/konfirmasi')}}">
-                                <i class="fa fa-check-square"></i>Konfirmasi Setoran</a>
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
@@ -204,15 +170,12 @@
                                     <a href="{{url('/admin/peminjaman')}}">Pinjaman</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('pinjaman.konfirmasiIndex') }}">Konfirmasi Pinjaman</a>
-                                </li>
-                                <li>
                                     <a href="{{url('/admin/riwayat')}}">Riwayat Pinjaman</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="has-sub">
-                            <a  href="{{ route('index.pdf') }}">
+                            <a  href="#">
                                 <i class="fas fa-copy"></i>Eksport</a>
                         </li>
                         

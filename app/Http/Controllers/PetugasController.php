@@ -31,7 +31,7 @@ class PetugasController extends Controller
         ->when($nama, function ($query, $nama) {
             return $query->where('name', 'like', '%' . $nama . '%');
         })
-        ->paginate(1);
+        ->paginate(4);
 
 
         return view ('admin.petugas.index', compact('users'));

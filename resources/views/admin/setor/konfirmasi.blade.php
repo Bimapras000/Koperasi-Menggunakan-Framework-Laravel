@@ -18,8 +18,6 @@
                 <th>Tanggal</th>
                 <th>Nama</th>
                 <th>Nominal</th>
-                <th class="text-right">Jumlah Setor</th>
-                <th class="text-right">Total Nominal</th>
                 <th class="text-right">Jenis Setor</th>
                 
                 <th class="text-right">Bukti Setoran</th>
@@ -34,8 +32,6 @@
                     <td>{{ $setoran->tgl_setor }}</td>
                     <td>{{ $setoran->users->name }}</td>
                     <td>{{ $setoran->nominal }}</td>
-                    <td>{{ $setoran->jlm_setor }}</td>
-                    <td>{{ $setoran->total_nominal }}</td>
                     <td>{{ $setoran->jenis_setor }}</td>
                    
                     <td>

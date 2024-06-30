@@ -46,6 +46,7 @@
                                                 <th>Nominal</th>
                                                 <th>Bunga</th>
                                                 <th>Total</th>
+                                                <th>Status</th>
                                                 <th>Detail</th>
                                             </tr>
                                         </thead>
@@ -63,9 +64,17 @@
                                                 <td>{{ $item->bunga }}</td>
                                                 <td>{{ $item->total }}</td>
                                                 <td>
+                                                    <span class="{{ $item->status == 'Lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </td>
+                                                <td>
                                                 
                                                     <a href="{{ url('admin/peminjaman/'.$item->id) }}" class="btn btn-info">Detail</a>
-                                                
+                                                    <!-- <button class="btn btn-info" data-toggle="modal" data-target="#detailModal" 
+                                                            data-id="{{ $item->id }}">
+                                                        Lihat Detail
+                                                    </button> -->
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -168,4 +177,62 @@
                             </div>
                         </div>
 
+                        <!-- Modal Detail -->
+<!-- <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel">Detail Peminjaman</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="viewName">Nama</label>
+                    <input type="text" class="form-control" id="viewName" name="viewName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewAlamat">Alamat</label>
+                    <input type="text" class="form-control" id="viewAlamat" name="viewAlamat" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewNoTlp">Nomor Telepon</label>
+                    <input type="text" class="form-control" id="viewNoTlp" name="viewNoTlp" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewKeperluan">Keperluan</label>
+                    <textarea class="form-control" id="viewKeperluan" name="viewKeperluan" readonly></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="viewNominal">Nominal</label>
+                    <input type="text" class="form-control" id="viewNominal" name="viewNominal" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewTglPinjaman">Tanggal Pinjaman</label>
+                    <input type="text" class="form-control" id="viewTglPinjaman" name="viewTglPinjaman" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewTglPengembalian">Tanggal Pengembalian</label>
+                    <input type="text" class="form-control" id="viewTglPengembalian" name="viewTglPengembalian" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewBunga">Bunga</label>
+                    <input type="text" class="form-control" id="viewBunga" name="viewBunga" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewTotal">Total</label>
+                    <input type="text" class="form-control" id="viewTotal" name="viewTotal" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="viewPembayaranBulanan">Pembayaran Bulanan</label>
+                    <input type="text" class="form-control" id="viewPembayaranBulanan" name="viewPembayaranBulanan" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div> -->
                         @endsection

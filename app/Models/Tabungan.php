@@ -20,7 +20,7 @@ class Tabungan extends Model
             return $this->belongsTo(Setor::class);
         }
         public function users(){
-            return $this->belongsTo(User::class);
+            return $this->belongsTo(User::class, 'users_id');
         }
 
 }

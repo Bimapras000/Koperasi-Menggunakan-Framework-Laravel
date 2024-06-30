@@ -57,12 +57,12 @@
                     <td>Rp {{ $tabunga->saldo }}</td>
                     <td>
                     <!-- Button to open the modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tarikModal{{$tabunga->id}}">
+                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tarikModal{{$tabunga->id}}">
                         Tarik
-                    </button>
+                    </button> -->
                     
                     <!-- Modal -->
-                    <div class="modal fade" id="tarikModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="tarikModalLabel{{$tabunga->id}}" aria-hidden="true">
+                    <!-- <div class="modal fade" id="tarikModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="tarikModalLabel{{$tabunga->id}}" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -86,7 +86,11 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                    <label class="switch">
+                            <input type="checkbox" class="toggle-tarik" data-id="{{$tabunga->id}}" {{ $tabunga->tarik_enabled ? 'checked' : '' }}>
+                            <span class="slider round"></span>
+                        </label>
                 </td>
                     <td>
                         <div class="table-data-feature">

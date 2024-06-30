@@ -3920,6 +3920,22 @@ section {
     }
 }
 
+.status-lunas {
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.status-belum-lunas {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
 .recent-report2 .chart-info__left {
     -webkit-align-self: flex-end;
     -ms-flex-item-align: end;

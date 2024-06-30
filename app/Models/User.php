@@ -28,14 +28,14 @@ class User extends Authenticatable
     ];
 
     public function tabungan(){
-        return $this->hasMany(Tabungan::class);
+        return $this->hasMany(Tabungan::class, 'users_id');
     }
 
     public function peminjaman(){
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasMany(Peminjaman::class, 'users_id');
     }
     public function setor(){
-        return $this->hasMany(Setor::class);
+        return $this->hasMany(Setor::class, 'users_id');
     }
 
     /**
