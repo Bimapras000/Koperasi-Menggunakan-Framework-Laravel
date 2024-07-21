@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\PetugasExport;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class PetugasController extends Controller
@@ -31,7 +33,7 @@ class PetugasController extends Controller
         ->when($nama, function ($query, $nama) {
             return $query->where('name', 'like', '%' . $nama . '%');
         })
-        ->paginate(4);
+        ->paginate(10);
 
 
         return view ('admin.petugas.index', compact('users'));
@@ -210,9 +212,20 @@ class PetugasController extends Controller
         return redirect('admin/petugas')->with('success', 'Petugas Berhasil Dihapus!');
     }
 
-    public function anggotaPDF(){
-        $anggota = User::get();
-        $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+    public function petugasPDF(){
+        // $anggota = User::get();
+        // if ($anggota->isEmpty()) {
+        //     return 'No data found';
+        // }
+        // $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
+        $petugas = User::where('jabatan', 'petugas')->get(); // Mengambil hanya pengguna dengan role 'petugas'
+        $pdf = PDF::loadView('admin.petugas.petugasPDF', ['petugas' => $petugas])->setPaper('a4', 'landscape');
+        return $pdf->stream('petugas.pdf');
+    }
+
+    public function exportPetugasExcel()
+    {
+        return Excel::download(new PetugasExport, 'petugas.xlsx');
     }
 }

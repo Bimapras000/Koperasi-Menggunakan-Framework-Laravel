@@ -9,28 +9,28 @@
             <div class="table-data__tool-left">
                 <form class="form-header" action="{{ route('anggota.setor') }}" method="GET">
                     <input class="au-input au-input--xl search-field" type="text" name="name" id="name" placeholder="Search for datas &amp; reports..." />
-                    <button class="au-btn--submit" type="submit">
+                    <button class="au-btn--submit green-button" type="submit">
                         <i class="zmdi zmdi-search"></i>
                     </button>
                 </form>
             </div>
             <div class="table-data__tool-right">
-                <button type="button" class="btn btn-primary mb-1" data-toggle="modal" data-target="#smallmodal">
+                <button type="button" class="btn btn-success mb-1" data-toggle="modal" data-target="#smallmodal">
                     <i class="zmdi zmdi-plus"></i> Tambah Setoran
                 </button>
             </div>
         </div>
-        <div class="table-responsive table--no-card m-b-40" style="max-height: 450px; overflow-y: auto;">
+        <div class="table-responsive table--no-card m-b-40" style="max-height: 680px; overflow-y: auto;">
             <table class="table table-borderless table-striped table-earning">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Tanggal</th>
                         <th>Nama</th>
-                        <th class="text-right">Jumlah Setor</th>
                         <th class="text-right">Nominal</th>
                         <th class="text-right">Jenis Setor</th>
                         <th class="text-right">Status</th>
+                        <th class="text-right">Invoice</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,8 +40,8 @@
                         <td>{{$no++}}</td>
                         <td>{{$setors->tgl_setor}}</td>
                         <td>{{ Auth::user()->name }}</td>
-                        <td class="text-right">{{$setors->jlm_setor}}</td>
-                        <td class="text-right">{{$setors->nominal}}</td>
+                
+                        <td class="text-right">Rp. {{ number_format($setors->nominal, 2) }}</td>
                         <td class="text-right">{{$setors->jenis_setor}}</td>
                         <td class="text-right">
                             @if($setors->konfirmasi == \App\Models\Setor::STATUS_APPROVED)
@@ -52,6 +52,29 @@
                                 <span class="badge badge-warning">Pending</span>
                             @endif
                         </td>
+                        <td>
+                            <button type="button" class="btn btn-success" onclick="downloadPDF({{ $setors->id }})">Download PDF</button>
+                        </td>
+                        <!-- Modal structure -->
+                        <div class="modal fade" id="invoiceModal{{ $setors->id }}" tabindex="-1" role="dialog" aria-labelledby="invoiceModalLabel{{ $setors->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="invoiceModalLabel{{ $setors->id }}">Invoice</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="invoiceContent{{ $setors->id }}">
+                                        <!-- Invoice content will be loaded here -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                        <button type="button" class="btn btn-primary" onclick="downloadPDF({{ $setors->id }})">Download</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                 @endforeach
                 </tbody>
@@ -89,30 +112,14 @@
                                 <span class="input-group-text">Rp</span>
                             </div>
                             <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" min="50000" required>
+            
+        
                         </div>
                         @error('nominal')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="jlm_setor">Jumlah Setor</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control @error('jlm_setor') is-invalid @enderror" id="jlm_setor" name="jlm_setor" required>
-                        </div>
-                        @error('jlm_setor')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="total_nominal">Total Nominal</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Rp</span>
-                            </div>
-                            <input type="text" class="form-control" id="total_nominal" name="total_nominal" readonly>
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="tgl_setor">Tanggal Setor</label>
@@ -159,6 +166,37 @@
         document.getElementById('total_nominal').value = total;
     }
 </script>
+<script>
+    function loadInvoice(id) {
+        $.ajax({
+            url: '/user/invoice/' + id,
+            method: 'GET',
+            success: function(data) {
+                $('#invoiceContent' + id).html(data);
+                $('#invoiceModal' + id).modal('show'); // Menampilkan modal setelah konten dimuat
+            },
+            error: function() {
+                alert('Gagal memuat invoice');
+            }
+        });
+    }
+
+    function downloadPDF(id) {
+        window.location.href = '/user/invoice/download/' + id;
+    }
+
+    $(document).on('click', '[data-toggle="modal"]', function () {
+        var target = $(this).data('target');
+        var id = $(this).data('id');
+        if (target && id) {
+            loadInvoice(id);
+        }
+    });
+</script>
+
+
+
+
 
 
 

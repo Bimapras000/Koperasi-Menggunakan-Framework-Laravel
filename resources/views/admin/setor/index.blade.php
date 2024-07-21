@@ -38,18 +38,28 @@
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div> -->
-                                        
-                                                <div class="col-12 col-md-9 rs-select2--dark rs-select2--sm rs-select2--dark2">
+                                        <div class="rs-select2--dark rs-select2--sm rs-select2--dark2 dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Cetak
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{{ route('setor.pdf') }}">PDF</a>
+                                                    <a class="dropdown-item" href="{{ route('Setor.excel') }}">Excel</a>
+                                                    
+                                                </div>
+                                            </div>
+                                                <!-- <div class="col-12 col-md-9 rs-select2--dark rs-select2--sm rs-select2--dark2">
                                                     <select name="select" id="select" class="">
                                                         <option selected="selected">Export</option>
                                                         <option value="">Option 1</option>
                                                         <option value="">Option 2</option>
                                                     </select>
-                                                </div>
+                                                </div> -->
                                             
                                     </div>
                                 </div>
-                                <div class="table-responsive table--no-card m-b-40" style="max-height: 450px; overflow-y: auto;">
+                                <div class="table-responsive table--no-card m-b-40" style="max-height: 560px; overflow-y: auto;">
                                     <table class="table table-borderless table-striped table-earning">
                                         <thead>
                                             <tr>
@@ -69,7 +79,7 @@
                                                 <td>{{$no++}}</td>
                                                 <td>{{$setors->tgl_setor}}</td>
                                                 <td>{{$setors->nama}}</td>
-                                                <td class="text-right">{{$setors->nominal}}</td>
+                                                <td class="text-right">Rp {{ number_format($setors->nominal, 0, ',', '.') }}</td>
                                                 <td class="text-right">{{$setors->jenis_setor}}</td>
                                                 
                                                 

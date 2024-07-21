@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Tabungan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\AnggotaExport;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class AnggotaController extends Controller
@@ -33,7 +35,7 @@ class AnggotaController extends Controller
         ->when($nama, function ($query, $nama) {
             return $query->where('name', 'like', '%' . $nama . '%');
         })
-        ->paginate(3);
+        ->paginate(10);
 
         return view ('admin.anggota.index', compact('users'));
     }
@@ -225,5 +227,8 @@ class AnggotaController extends Controller
         return $pdf->stream('anggota.pdf');
     }
 
-    
+    public function exportAnggotaExcel()
+    {
+        return Excel::download(new AnggotaExport, 'anggota.xlsx');
+    }
 }

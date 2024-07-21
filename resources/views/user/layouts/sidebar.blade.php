@@ -37,6 +37,83 @@
     <!-- Main CSS-->
     <link href="{{asset('admin/css/theme.css')}}" rel="stylesheet" media="all">
 
+<style>
+    .green-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.green-button:hover {
+    background-color: darkgreen;
+}
+body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Mengatur ukuran logo di header mobile */
+        .header-mobile .logo img {
+            width: 100%;
+            max-width: 120px; /* Atur lebar maksimum untuk logo */
+            height: auto;
+        }
+
+        /* Media query untuk layar kecil */
+        @media (max-width: 768px) {
+            .header-mobile .logo img {
+                max-width: 120px; /* Atur lebar maksimum untuk layar kecil */
+            }
+        }
+
+        /* Gaya untuk hamburger menu */
+        .hamburger {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .hamburger-box {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .hamburger-inner {
+            display: block;
+            top: 50%;
+            margin-top: -2px;
+            background-color: #000;
+            width: 24px;
+            height: 2px;
+            border-radius: 2px;
+            position: absolute;
+            transition: all 0.4s ease;
+        }
+
+        .hamburger-inner:before,
+        .hamburger-inner:after {
+            content: "";
+            display: block;
+            background-color: #000;
+            width: 24px;
+            height: 2px;
+            border-radius: 2px;
+            position: absolute;
+            transition: all 0.4s ease;
+        }
+
+        .hamburger-inner:before {
+            top: -8px;
+        }
+
+        .hamburger-inner:after {
+            bottom: -8px;
+        }
+
+</style>
 
 
 </head>
@@ -48,8 +125,8 @@
             <div class="header-mobile__bar">
                 <div class="container-fluid">
                     <div class="header-mobile-inner">
-                        <a class="logo" href="index.html">
-                            <img src="{{asset('admin/images/icon/logo2.png')}}" alt="CoolAdmin" />
+                        <a class="logo" href="{{ url('/user/dashboarduser') }}">
+                            <img src="{{asset('admin/images/icon/logo3.png')}}" alt="CoolAdmin" />
                         </a>
                         <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -63,76 +140,26 @@
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
                         <li class="has-sub">
-                            <a class="js-arrow" href="{{ url('/admin/dashboard') }}">
+                            <a class="js-arrow" href="{{ url('/user/dashboarduser') }}">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
                         <li>
-                            <a href="table.html">
-                                <i class="fas fa-table"></i>Anggota</a>
+                            <a href="{{url('/user/tabunganuser')}}">
+                                <i class="fas fa-chart-bar"></i>Tabungan</a>
                         </li>
                         <li>
-                            <a href="form.html">
-                                <i class="far fa-check-square"></i>Forms</a>
-                        </li>
-                        <li>
-                            <a href="calendar.html">
-                                <i class="fas fa-calendar-alt"></i>Riwayat Setoran</a>
-                        </li>
-                        <li>
-                            <a href="map.html">
-                                <i class="fas fa-map-marker-alt"></i>Maps</a>
+                            <a href="{{url('/user/setoruser')}}">
+                                <i class="fa fa-dollar"></i>Setor</a>
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
-                                <i class="fas fa-copy"></i>Pages</a>
+                                <i class="far fa-check-square"></i>Pinjaman</a>
                             <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                                 <li>
-                                    <a href="login.html">Login</a>
+                                    <a href="{{url('/user/peminjaman')}}">Pinjaman</a>
                                 </li>
                                 <li>
-                                    <a href="register.html">Register</a>
-                                </li>
-                                <li>
-                                    <a href="forget-pass.html">Forget Password</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-desktop"></i>UI Elements</a>
-                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                                <li>
-                                    <a href="button.html">Button</a>
-                                </li>
-                                <li>
-                                    <a href="badge.html">Badges</a>
-                                </li>
-                                <li>
-                                    <a href="tab.html">Tabs</a>
-                                </li>
-                                <li>
-                                    <a href="card.html">Cards</a>
-                                </li>
-                                <li>
-                                    <a href="alert.html">Alerts</a>
-                                </li>
-                                <li>
-                                    <a href="progress-bar.html">Progress Bars</a>
-                                </li>
-                                <li>
-                                    <a href="modal.html">Modals</a>
-                                </li>
-                                <li>
-                                    <a href="switch.html">Switchs</a>
-                                </li>
-                                <li>
-                                    <a href="grid.html">Grids</a>
-                                </li>
-                                <li>
-                                    <a href="fontawesome.html">Fontawesome Icon</a>
-                                </li>
-                                <li>
-                                    <a href="typo.html">Typography</a>
+                                    <a href="{{url('/user/riwayatpeminjaman')}}">Riwayat Pinjaman</a>
                                 </li>
                             </ul>
                         </li>
@@ -151,15 +178,15 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                         <li class="active has-sub">
-                            <a class="js-arrow" href="{{url('/admin/dashboard')}}">
+                            <a class="js-arrow" href="{{url('/user/dashboarduser')}}">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
                         <li>
-                            <a href="{{url('/admin/tabungan')}}">
+                            <a href="{{url('/user/tabunganuser')}}">
                                 <i class="fas fa-chart-bar"></i>Tabungan</a>
                         </li>
                         <li>
-                            <a href="{{url('/admin/setor')}}">
+                            <a href="{{url('/user/setoruser')}}">
                                 <i class="fa fa-dollar"></i>Setor</a>
                         </li>
                         <li class="has-sub">
@@ -167,16 +194,12 @@
                                 <i class="far fa-check-square"></i>Pinjaman</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li>
-                                    <a href="{{url('/admin/peminjaman')}}">Pinjaman</a>
+                                    <a href="{{url('/user/peminjaman')}}">Pinjaman</a>
                                 </li>
                                 <li>
-                                    <a href="{{url('/admin/riwayat')}}">Riwayat Pinjaman</a>
+                                    <a href="{{url('/user/riwayatpeminjaman')}}">Riwayat Pinjaman</a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="has-sub">
-                            <a  href="#">
-                                <i class="fas fa-copy"></i>Eksport</a>
                         </li>
                         
                     </ul>

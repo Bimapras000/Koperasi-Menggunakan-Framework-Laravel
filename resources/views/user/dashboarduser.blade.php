@@ -76,8 +76,7 @@
                             <th>Tanggal</th>
                             <th>Nama</th>
                             <th class="text-right">Nominal</th>
-                            <th class="text-right">Jumlah Setor</th>
-                            <th class="text-right">Total</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -85,16 +84,14 @@
                             <tr>
                                 <td>{{ $transaksi->tgl_setor }}</td>
                                 <td>{{ $transaksi->users->name }}</td>
-                                <td class="text-right">{{ number_format($transaksi->nominal, 2) }}</td>
-                                <td class="text-right">{{ $transaksi->jlm_setor }}</td>
-                                <td class="text-right">{{ number_format($transaksi->total_nominal, 2) }}</td>
+                                <td class="text-right">Rp. {{ number_format($transaksi->nominal, 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="text-center">
-                <a href="{{url('/user/setor')}}" class="au-btn au-btn-load">Lihat Lebih</a>
+                <a href="{{url('/user/setoruser')}}" class="au-btn au-btn-load">Lihat Lebih</a>
             </div>
         </div>
     </div>

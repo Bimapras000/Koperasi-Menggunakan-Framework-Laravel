@@ -36,7 +36,7 @@
                     <td>{{ $item->users->name }}</td>
                     <td>{{ $item->tgl_pinjaman }}</td>
                     <td>{{ $item->tgl_pengembalian }}</td>
-                    <td>{{ $item->total }}</td>
+                    <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
                     <td>
                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#detailModal" data-id="{{ $item->id }}">Detail</button>
                         <form action="{{ route('pinjaman.konfirmasi', $item->id) }}" method="POST">

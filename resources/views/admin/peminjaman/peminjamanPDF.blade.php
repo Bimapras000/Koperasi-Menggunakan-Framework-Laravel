@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Anggota</title>
+    <title>Data Peminjaman</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,29 +59,38 @@
             <h1>Koperasi Mayangsari</h1>
             <p>Jl. Abadi, Kemloko, Kec. Nglegok, Kabupaten Blitar</p>
         </div>
-    </div><hr>
-    <h3>Data Anggota</h3>
+    </div>
+    <hr>
+    <h1>Data Peminjaman</h1>
     <table>
         <thead>
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Username</th>
-                <th>Nomer Telepon</th>
-                <th>alamat</th>     
+                <th>Tanggal Peminjaman</th>
+                <th>Tanggal Pengembalian</th>
+                <th>Nominal</th>
+                <th>Total</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @php $no = 1 @endphp
-            @foreach ($anggota as $a)
-                                    
-            <tr>
-                <td>{{$no++}}</td>
-                <td>{{$a->name}}</td>
-                <td>{{$a->username}}</td>
-                <td>{{$a->no_tlp}}</td>
-                <td>{{$a->alamat}}</td>
-            </tr>
+            @php $no = 1; @endphp
+            @foreach ($peminjaman as $pinjam)
+                <tr>
+                    <td>{{ $no++ }}</td>
+                    
+                    <td>{{ $pinjam->users->name }}</td>
+                    <td>{{ $pinjam->tgl_pinjaman}}</td>
+                    <td>{{ $pinjam->tgl_pengembalian }}</td>
+                    <td>{{ number_format($pinjam->nominal, 0, ',', '.') }}</td>
+                    <td>{{ number_format($pinjam->total, 0, ',', '.') }}</td>
+                    <td>
+                        <span class="{{ $pinjam->status == 'Lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
+                            {{ $pinjam->status }}
+                        </span>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

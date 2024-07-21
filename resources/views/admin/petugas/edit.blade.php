@@ -104,7 +104,7 @@
   
   <div class="form-group row">
     <div class="offset-4 col-8">
-        <a href="{{url('admin/petugas')}}" class="btn btn-secondary">close</a>
+        <a href="{{url('admin/petugas')}}" class="btn btn-secondary">Batal</a>
       <button name="submit" type="submit" class="btn btn-warning" style="color:white">Edit</button>
     </div>
   </div>

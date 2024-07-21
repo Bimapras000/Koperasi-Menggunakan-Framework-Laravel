@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Anggota</title>
+    <title>Data Tabungan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,28 +60,24 @@
             <p>Jl. Abadi, Kemloko, Kec. Nglegok, Kabupaten Blitar</p>
         </div>
     </div><hr>
-    <h3>Data Anggota</h3>
+    <h1>Data Tabungan</h1>
     <table>
         <thead>
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Username</th>
-                <th>Nomer Telepon</th>
-                <th>alamat</th>     
+                <th>alamat</th>
+                <th>Jumlah Tabungan</th>
             </tr>
         </thead>
         <tbody>
-            @php $no = 1 @endphp
-            @foreach ($anggota as $a)
-                                    
-            <tr>
-                <td>{{$no++}}</td>
-                <td>{{$a->name}}</td>
-                <td>{{$a->username}}</td>
-                <td>{{$a->no_tlp}}</td>
-                <td>{{$a->alamat}}</td>
-            </tr>
+            @foreach ($tabungan as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->users->name }}</td>
+                    <td>{{ $item->users->alamat }}</td>
+                    <td>{{ $item->saldo }}</td> <!-- Sesuaikan dengan field yang sesuai -->
+                </tr>
             @endforeach
         </tbody>
     </table>

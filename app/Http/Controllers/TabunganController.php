@@ -7,20 +7,33 @@ use App\Models\Setor;
 use App\Models\User;
 use App\Models\Tabungan;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TabunganExport;
+use PDF;
 
 class TabunganController extends Controller
 {
     //
 
-    public function index()
+    public function index(Request $request)
 {
+    $search = $request->input('search');
+
     $setor = DB::table('setor')->get();
     $users = DB::table('users')->get();
-    $tabungan = Tabungan::join('users', 'users.id', '=', 'tabungan.users_id')
-        ->select('tabungan.*', 'users.name as nama')
-        ->get();
-    return view('admin.tabungan.index', compact( 'users', 'tabungan'));
+    $tabunganQuery = Tabungan::join('users', 'users.id', '=', 'tabungan.users_id')
+        ->select('tabungan.*', 'users.name as nama');
+
+    if ($search) {
+        $tabunganQuery->where('users.name', 'like', '%' . $search . '%')
+                      ->orWhere('tabungan.saldo', 'like', '%' . $search . '%');
+    }
+
+    $tabungan = $tabunganQuery->paginate(10); // Adjust the number of items per page as needed
+
+    return view('admin.tabungan.index', compact('users', 'tabungan', 'search'));
 }
+
 
 
     public function create()
@@ -37,7 +50,7 @@ class TabunganController extends Controller
         //
         $request->validate([
             'users_id' => 'required|exists:users,id',
-            'saldo' => 'required|numeric',
+            'saldo' => 'required',
         ], [
             'users_id.required' => 'Nama wajib diisi',
             'users_id.exists' => 'User tidak ditemukan',
@@ -46,33 +59,95 @@ class TabunganController extends Controller
             
         ]);
 
-        DB::table('tabungan')->insert([
-            'users_id' => $request->users_id,
-            'saldo' => $request->saldo,
-            
-        ]);
+        $saldo = str_replace(['.', ','], '', $request->saldo);
+
+        $tabungan = DB::table('tabungan')->where('users_id', $request->users_id)->first();
+    
+        if ($tabungan) {
+            // Update saldo existing
+            DB::table('tabungan')
+                ->where('users_id', $request->users_id)
+                ->update(['saldo' => $tabungan->saldo + $saldo]);
+        } else {
+            // Insert new tabungan
+            DB::table('tabungan')->insert([
+                'users_id' => $request->users_id,
+                'saldo' => $saldo,
+            ]);
+        }
 
 
         return redirect('admin/tabungan')->with('success', 'Berhasil Menambahkan Tabungan');
     }
 
-    public function tarikSaldo(Request $request, $id)
+    public function edit($id)
+{
+    $tabungan = Tabungan::findOrFail($id);
+    return view('admin.tabungan.edit', compact('tabungan'));
+}
+
+public function update(Request $request, $id)
+{
+    $tabungan = Tabungan::findOrFail($id);
+    $tabungan->update($request->all());
+    return redirect()->route('tabungan.index')->with('success', 'Data tabungan berhasil diedit.');
+}
+
+public function toggleTarik(Request $request)
+{
+    $tabungan = Tabungan::findOrFail($request->id);
+    $tabungan->tarik_enabled = !$tabungan->tarik_enabled;
+    $tabungan->save();
+
+    return response()->json(['success' => 'Status tarik berhasil diubah.']);
+}
+
+
+    // public function tarikSaldo(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'amount' => 'required|numeric|min:0',
+    //     ]);
+
+    //     $tabungan = Tabungan::findOrFail($id);
+
+    //     // Pastikan saldo yang ingin ditarik tidak lebih besar dari saldo saat ini
+    //     if ($request->amount > $tabungan->saldo) {
+    //         return redirect()->back()->with('error', 'Saldo tidak mencukupi untuk penarikan ini.');
+    //     }
+
+    //     // Kurangi saldo
+    //     $tabungan->saldo -= $request->amount;
+    //     $tabungan->save();
+
+    //     return redirect()->back()->with('success', 'Berhasil menarik saldo.');
+    // }
+
+    public function destroy(string $id)
     {
-        $request->validate([
-            'amount' => 'required|numeric|min:0',
-        ]);
+        //
+        DB::table('tabungan')->where('id',$id)->delete();
+        return redirect('admin/tabungan')->with('success', 'Tabungan Berhasil Dihapus!');
+    }
 
-        $tabungan = Tabungan::findOrFail($id);
+    public function tabunganPDF(){
+        // $anggota = User::get();
+        // if ($anggota->isEmpty()) {
+        //     return 'No data found';
+        // }
+        // $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
+        $tabungan = Tabungan::with('users')->whereHas('users', function($query) {
+            $query->whereIn('jabatan', ['anggota', 'petugas']);
+        })->get();
 
-        // Pastikan saldo yang ingin ditarik tidak lebih besar dari saldo saat ini
-        if ($request->amount > $tabungan->saldo) {
-            return redirect()->back()->with('error', 'Saldo tidak mencukupi untuk penarikan ini.');
-        }
+        $pdf = PDF::loadView('admin.tabungan.tabunganPDF', ['tabungan' => $tabungan])->setPaper('a4', 'landscape');
+        
+        return $pdf->stream('tabungan.pdf');
+    }
 
-        // Kurangi saldo
-        $tabungan->saldo -= $request->amount;
-        $tabungan->save();
-
-        return redirect()->back()->with('success', 'Berhasil menarik saldo.');
+    public function exportExcel()
+    {
+        return Excel::download(new TabunganExport, 'tabungan.xlsx');
     }
 }

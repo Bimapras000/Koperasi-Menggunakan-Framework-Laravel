@@ -40,7 +40,7 @@
             @foreach ($data as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->nama }}</td>
+                    <td>{{ $item->users->name }}</td>
                     <td>{{ $item->tgl_pinjaman }}</td>
                     <td>{{ $item->tgl_pengembalian }}</td>
                     <td>{{ $item->nominal }}</td>

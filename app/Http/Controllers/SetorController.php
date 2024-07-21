@@ -9,6 +9,10 @@ use App\Models\Tabungan;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exports\SetorExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+use Carbon\Carbon;
 
 class SetorController extends Controller
 {
@@ -82,7 +86,7 @@ class SetorController extends Controller
         //
         $request->validate([
             'name' => 'required|exists:users,id', // pastikan name adalah id dari users
-            'nominal' => 'required|numeric|min:50000',
+            'nominal' => 'required|regex:/^\d{1,3}(\.\d{3})*(,\d+)?$/',
             'jenis_setor' => 'required|max:20',
             'tgl_setor' => 'required|date',
             'bukti_foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
@@ -91,7 +95,8 @@ class SetorController extends Controller
             'name.exists' => 'Nama tidak ditemukan dalam daftar pengguna',
             'nominal.required' => 'Nominal wajib diisi',
             'nominal.numeric' => 'Nominal harus berupa angka',
-            'nominal.min' => 'Nominal minimal adalah Rp. 50.000',
+            'nominal.regex' => 'Format nominal tidak valid',
+            
             'jenis_setor.required' => 'Jenis Setor wajib diisi',
             'tgl_setor.required' => 'Tanggal Setor wajib diisi',
             'tgl_setor.date' => 'Tanggal Setor harus berupa tanggal yang valid',
@@ -108,7 +113,12 @@ class SetorController extends Controller
         }
 
         $userId = $request->name; 
-        $totalNominal = $request->nominal;
+        $totalNominal = str_replace(['.', ','], '', $request->nominal);
+
+        // Validasi minimal nominal setelah format
+    if ($totalNominal < 50000) {
+        return redirect()->back()->withErrors(['nominal' => 'Nominal minimal adalah Rp. 50.000'])->withInput();
+    }
 
     // Insert ke tabel setor
     DB::table('setor')->insert([
@@ -186,6 +196,7 @@ class SetorController extends Controller
 }
 
 
+
 public function tolak($id)
 {
     $setoran = Setor::find($id);
@@ -209,5 +220,32 @@ public function tolak($id)
     {
         $setorans = Setor::all();
         return view('admin.setor.riwayat', compact('setorans'));
+    }
+
+    public function setorPDF(){
+        // $anggota = User::get();
+        // if ($anggota->isEmpty()) {
+        //     return 'No data found';
+        // }
+        // $pdf = PDF::loadView('admin.anggota.anggotaPDF', ['anggota' => $anggota])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
+        $setor = Setor::all(); // Mengambil semua data setoran
+
+// Menghitung total setoran yang dikonfirmasi setiap bulan
+$confirmedSetorPerMonth = Setor::selectRaw('YEAR(tgl_setor) as year, MONTH(tgl_setor) as month, SUM(nominal) as total_nominal')
+->where('konfirmasi', \App\Models\Setor::STATUS_APPROVED)
+->groupBy('year', 'month')
+->orderBy('year', 'asc') // Pastikan order direction adalah 'asc' atau 'desc'
+->orderBy('month', 'asc') // Pastikan order direction adalah 'asc' atau 'desc'
+->get();
+
+    $pdf = PDF::loadView('admin.setor.setorPDF', compact('setor','confirmedSetorPerMonth'))->setPaper('a4', 'landscape');
+    return $pdf->stream('setor.pdf');
+
+    }
+
+    public function exportSetorExcel()
+    {
+        return Excel::download(new SetorExport, 'Setor.xlsx');
     }
 }

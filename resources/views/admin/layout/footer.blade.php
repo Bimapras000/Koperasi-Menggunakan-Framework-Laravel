@@ -1,7 +1,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="copyright">
-                                    <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                    <p>Copyright © 2024 koperasi mayangsari.</p>
                                 </div>
                             </div>
                         </div>
@@ -31,6 +31,7 @@
 <script src="{{ asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
 <script src="{{ asset('admin/vendor/chartjs/Chart.bundle.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('admin/js/main.js') }}"></script>
@@ -97,7 +98,7 @@ function viewMemberDetails(userId) {
     @endif
 </script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const nominalInput = document.getElementById('nominal');
         const jumlahSetorInput = document.getElementById('jlm_setor');
@@ -113,7 +114,7 @@ function viewMemberDetails(userId) {
         nominalInput.addEventListener('input', calculateTotalNominal);
         jumlahSetorInput.addEventListener('input', calculateTotalNominal);
     });
-</script>
+</script> -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const nominalInput = document.getElementById('nominal');
@@ -145,7 +146,7 @@ function viewMemberDetails(userId) {
     });
 </script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const nominal = document.getElementById('nominal');
         const jlmSetor = document.getElementById('jlm_setor');
@@ -160,7 +161,18 @@ function viewMemberDetails(userId) {
         nominal.addEventListener('input', updateTotalNominal);
         jlmSetor.addEventListener('input', updateTotalNominal);
     });
-</script>
+</script> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var cleaveC = new Cleave('#nominal', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                delimiter: '.', 
+                numeralDecimalMark: ','
+            });
+        });
+    </script>
 
 <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {

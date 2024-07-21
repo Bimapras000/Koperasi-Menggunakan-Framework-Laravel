@@ -42,10 +42,9 @@
                         @endif
                     </td>
                     <td>
-                        <form action="{{ route('setor.konfirmasi', $setoran->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-success">Konfirmasi</button>
-                        </form>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal{{$setoran->id}}">
+                            Konfirmasi
+                        </button>
 
                         <form action="{{ route('setor.tolak' , $setoran->id) }}" method="POST" style="display:inline-block;">
                             @csrf
@@ -59,7 +58,31 @@
     </table>
 </div>
 </div>
-
+<!-- Modal Konfirmasi -->
+@foreach ($setorans as $setoran)
+<div class="modal fade" id="confirmModal{{$setoran->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel{{$setoran->id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel{{$setoran->id}}">Konfirmasi Setoran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin mengkonfirmasi setoran dari {{$setoran->users->name}} sebesar Rp {{ number_format($setoran->nominal, 0, ',', '.') }}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <form action="{{ route('setor.konfirmasi', $setoran->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Konfirmasi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 <!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -77,4 +100,20 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buktiFotos = document.querySelectorAll('.bukti-foto');
+        const modalImage = document.getElementById('modalImage');
+
+        buktiFotos.forEach(foto => {
+            foto.addEventListener('click', function() {
+                modalImage.src = this.src;
+                $('#imageModal').modal('show');
+            });
+        });
+    });
+</script>
 @endsection

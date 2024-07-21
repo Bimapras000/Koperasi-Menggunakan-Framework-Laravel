@@ -3,14 +3,25 @@
 
 <!-- <div class="section__content section__content--p30"> -->
                     <!-- <div class="container-fluid"> -->
+
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-error">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
 <div class="row">
                             <div class="col-md-12">
                                 <!-- DATA TABLE -->
                                 <h3 class="title-5 m-b-35">Data Tabungan</h3>
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
-                                        <form class="form-header" action="" method="POST">
-                                            <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
+                                        <form class="form-header" action="{{ route('tabungan.index') }}" method="GET">
+                                            <input class="au-input au-input--xl" type="text" name="search" placeholder=" " value="{{ old('search', $search) }}" />
                                             <button class="au-btn--submit" type="submit">
                                                 <i class="zmdi zmdi-search"></i>
                                             </button>
@@ -23,16 +34,21 @@
 											Tambah Tabungan
 										    </button>
 
-                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
-                                            <select class="js-select2" name="type">
-                                                <option selected="selected">Export</option>
-                                                <option value="">Option 1</option>
-                                                <option value="">Option 2</option>
-                                            </select>
-                                            <div class="dropDownSelect2"></div>
+                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2 dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Cetak
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{{ route('tabungan.pdf') }}">PDF</a>
+                                                    <a class="dropdown-item" href="{{ route('tabungan.excel') }}">Excel</a>
+                                                    
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="table-responsive table-responsive-data2">
                                     <table class="table table-data2">
                                         <thead>
@@ -40,105 +56,98 @@
                                                 <th>No</th>
                                                 <th>Nama</th>
                                                 <th>Saldo</th>
-                                                <th>Tarik</th>
+                                                
                                                 <th></th>
                             
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @php $no = 1 @endphp
+                                        @php 
+                                        $no = ($tabungan->currentPage() - 1) * $tabungan->perPage() + 1;
+                                        @endphp
                                         @foreach ($tabungan as $tabunga)
                                        
                                         
                                             <tr class="tr-shadow">
                                                 
                                             <td>{{$no++}}</td>
-                    <td><span class="block-email">{{$tabunga->nama}}</span></td>
-                    <td>Rp {{ $tabunga->saldo }}</td>
-                    <td>
-                    <!-- Button to open the modal -->
-                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tarikModal{{$tabunga->id}}">
-                        Tarik
-                    </button> -->
-                    
-                    <!-- Modal -->
-                    <!-- <div class="modal fade" id="tarikModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="tarikModalLabel{{$tabunga->id}}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="tarikModalLabel{{$tabunga->id}}">Tarik Saldo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="{{ url('admin/tabungan/tarik', $tabunga->id) }}" method="POST">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="amount">Jumlah Saldo yang Ditarik</label>
-                                            <input type="number" name="amount" class="form-control" placeholder="Masukkan jumlah" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                        <button type="submit" class="btn btn-primary">Tarik</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> -->
-                    <label class="switch">
-                            <input type="checkbox" class="toggle-tarik" data-id="{{$tabunga->id}}" {{ $tabunga->tarik_enabled ? 'checked' : '' }}>
-                            <span class="slider round"></span>
-                        </label>
-                </td>
-                    <td>
-                        <div class="table-data-feature">
-                            <a href="{{url('admin/anggota/edit/'.$tabunga->id)}}" type="button" class="btn item" data-toggle="tooltip" data-placement="top" title="Edit">
-                                <i class="zmdi zmdi-edit"></i>
-                            </a>
-                            <button type="button" class="item" data-placement="top" title="Delete" data-toggle="modal" data-target="#deleteModal{{$tabunga->id}}">
-                                <i class="zmdi zmdi-delete"></i>
-                            </button>
-                            <button type="button" class="item" data-toggle="modal" data-target="#viewMemberModal" onclick="viewMemberDetails({{ $tabunga->id }})" data-placement="top" title="View">
-                                <i class="zmdi zmdi-eye"></i>
-                            </button>
-                        </div>
-                        <div class="modal fade" id="deleteModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel{{$tabunga->id}}">Hapus Data</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Apakah anda yakin ingin menghapus data {{$tabunga->nama}}?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <a href="{{ url('admin/anggota/delete/'.$tabunga->id) }}" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
+                                            <td><span class="block-email">{{$tabunga->nama}}</span></td>
+                                            <td>Rp {{ number_format($tabunga->saldo, 0, ',', '.') }}</td>
+                                            <td>
+                                                <div class="table-data-feature">
+                                                    <button type="button" class="btn item" data-toggle="modal" data-target="#editModal{{$tabunga->id}}" data-placement="top" title="Edit">
+                                                        <i class="zmdi zmdi-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="item" data-placement="top" title="Delete" data-toggle="modal" data-target="#deleteModal{{$tabunga->id}}">
+                                                        <i class="zmdi zmdi-delete"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal fade" id="deleteModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="deleteModalLabel{{$tabunga->id}}">Hapus Data</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Apakah anda yakin ingin menghapus data {{$tabunga->nama}}?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                                                                <a href="{{ url('admin/tabungan/delete/'.$tabunga->id) }}" class="btn btn-danger">Hapus</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             </tr>
                                             <tr class="spacer"></tr>
-                                            
+                                            <!-- Modal Edit Tabungan -->
+<div class="modal fade" id="editModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$tabunga->id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{$tabunga->id}}">Edit Tabungan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('tabungan.update', $tabunga->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama{{$tabunga->id}}">Nama</label>
+                        <input type="text" name="nama" id="nama{{$tabunga->id}}" class="form-control" value="{{ $tabunga->nama }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="saldo{{$tabunga->id}}">Saldo</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp</span>
+                            </div>
+                        <input type="number" name="saldo" id="saldo{{$tabunga->id}}" class="form-control" value="{{ number_format($tabunga->saldo, 0, ',', '.') }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                                             
                                             @endforeach
                                             
                                         </tbody>
 
                                         
-                                        
-
-
                                     </table>
                                 </div>
-
+                                {{ $tabungan->links('pagination::bootstrap-5') }}
                                 
     
 
@@ -180,7 +189,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Rp</span>
                             </div>
-                            <input type="text" class="form-control @error('saldo') is-invalid @enderror" id="saldo" name="saldo" required>
+                            <input type="text" class="form-control @error('saldo') is-invalid @enderror" id="nominal" name="saldo" value="{{ old('saldo') }}" required>
                         </div>
                         @error('saldo')
                             <div class="invalid-feedback">
@@ -188,58 +197,24 @@
                             </div>
                         @enderror
                     </div>
+
                 </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" name="submit" class="btn btn-primary">Confirm</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                                        <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- modal view -->
-                        <div class="modal fade" id="viewMemberModal" tabindex="-1" role="dialog" aria-labelledby="viewMemberModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewMemberModalLabel">Detail Anggota</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="viewName">Nama</label>
-                    <input type="text" class="form-control" id="viewName" name="viewName" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewUsername">Username</label>
-                    <input type="text" class="form-control" id="viewUsername" name="viewUsername" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewNoTlp">Nomer Telepon</label>
-                    <input type="text" class="form-control" id="viewNoTlp" name="viewNoTlp" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewAlamat">Alamat</label>
-                    <input type="text" class="form-control" id="viewAlamat" name="viewAlamat" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewJabatan">Jabatan</label>
-                    <input type="text" class="form-control" id="viewJabatan" name="viewJabatan" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewKtp">Foto KTP</label><br>
-                    <img id="viewKtp" class="img-fluid" src="" alt="Foto KTP">
-                </div>
-               >
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<script>
+    $(document).ready(function() {
+        // Menutup modal setelah submit form
+        $('form').on('submit', function() {
+            $('.modal').modal('hide');
+        });
+    });
+</script>
 
 
 

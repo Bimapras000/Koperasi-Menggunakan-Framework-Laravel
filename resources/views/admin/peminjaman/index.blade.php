@@ -7,6 +7,15 @@
                             <div class="col-md-12">
                                 <!-- DATA TABLE -->
                                 <h3 class="title-5 m-b-35">Peminjaman</h3>
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
                                         <form class="form-header" action="" method="POST">
@@ -23,17 +32,20 @@
 											Tambah Peminjaman
 										    </button>
 
-                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2">
-                                            <select class="js-select2" name="type">
-                                                <option selected="selected">Export</option>
-                                                <option value="">Option 1</option>
-                                                <option value="">Option 2</option>
-                                            </select>
-                                            <div class="dropDownSelect2"></div>
-                                        </div>
+                                            <div class="rs-select2--dark rs-select2--sm rs-select2--dark2 dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Cetak
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{{ route('Peminjaman.pdf') }}">PDF</a>
+                                                    <a class="dropdown-item" href="{{ route('Peminjaman.excel') }}">Excel</a>
+                                                    
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
-                                <div class="table-responsive table--no-card m-b-40" style="max-height: 450px; overflow-y: auto;">
+                                <div class="table-responsive table--no-card m-b-40" style="max-height: 560px; overflow-y: auto;">
                                     <table class="table table-borderless table-striped table-earning">
                                         <thead>
                                             <tr>
@@ -60,9 +72,9 @@
                                                 <!-- <td>{{ $item->keperluan }}</td> -->
                                                 <td>{{ $item->tgl_pinjaman }}</td>
                                                 <td>{{ $item->tgl_pengembalian }}</td>
-                                                <td>{{ $item->nominal }}</td>
+                                                <td>Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                                 <td>{{ $item->bunga }}</td>
-                                                <td>{{ $item->total }}</td>
+                                                <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
                                                 <td>
                                                     <span class="{{ $item->status == 'Lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
                                                         {{ $item->status }}
@@ -90,149 +102,92 @@
                             </div>
                         </div>
                         <div class="modal fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-md" role="document">
-                                <div class="modal-content">
-                                    <form action="{{ url('admin/peminjaman/store') }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="smallmodalLabel">Form Tambah Peminjaman</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="select">Nama</label>
-                                                <select name="users_id" id="users_id" class="js-select2 form-control @error('users_id') is-invalid @enderror">
-                                                    @foreach ($users as $user)
-                                                        @if ($user->jabatan == 'anggota' || $user->jabatan == 'petugas')
-                                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <div class="dropDownSelect2"></div>
-                                                @error('users_id')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        <div class="form-group">
-                                            <label for="keperluan">Keperluan</label>
-                                            <textarea type="text" class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" required></textarea>
-                                            @error('keperluan')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="nominal">Nominal</label>
-                                            <input type="number" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" step="0.01" required>
-                                            @error('nominal')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="tgl_pinjaman">Tanggal Peminjaman</label>
-                                            <input type="date" class="form-control @error('tgl_pinjaman') is-invalid @enderror" id="tgl_pinjaman" name="tgl_pinjaman" required>
-                                            @error('tgl_pinjaman')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="tgl_pengembalian">Tanggal Pengembalian</label>
-                                            <input type="date" class="form-control @error('tgl_pengembalian') is-invalid @enderror" id="tgl_pengembalian" name="tgl_pengembalian" required>
-                                            @error('tgl_pengembalian')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="bunga">Bunga (%)</label>
-                                            <input type="number" class="form-control @error('bunga') is-invalid @enderror" id="bunga" name="bunga" step="0.01" placeholder="2 %" readonly>
-                                            @error('bunga')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="total">Total</label>
-                                            <input type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" step="0.01" readonly>
-                                            @error('total')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                                            <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal Detail -->
-<!-- <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailModalLabel">Detail Peminjaman</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="viewName">Nama</label>
-                    <input type="text" class="form-control" id="viewName" name="viewName" readonly>
+            <form action="{{ url('admin/peminjaman/store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="smallmodalLabel">Form Tambah Peminjaman</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="viewAlamat">Alamat</label>
-                    <input type="text" class="form-control" id="viewAlamat" name="viewAlamat" readonly>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="select">Nama</label>
+                        <select name="users_id" id="users_id" class="js-select2 form-control @error('users_id') is-invalid @enderror">
+                            @foreach ($users as $user)
+                                @if ($user->jabatan == 'anggota' || $user->jabatan == 'petugas')
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                        @error('users_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="keperluan">Keperluan</label>
+                        <textarea type="text" class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" required></textarea>
+                        @error('keperluan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="nominal">Nominal</label>
+                        <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" step="0.01" required>
+                        @error('nominal')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="tgl_pinjaman">Tanggal Peminjaman</label>
+                        <input type="date" class="form-control @error('tgl_pinjaman') is-invalid @enderror" id="tgl_pinjaman" name="tgl_pinjaman" required>
+                        @error('tgl_pinjaman')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="tgl_pengembalian">Tanggal Pengembalian</label>
+                        <input type="date" class="form-control @error('tgl_pengembalian') is-invalid @enderror" id="tgl_pengembalian" name="tgl_pengembalian" required>
+                        @error('tgl_pengembalian')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="bunga">Bunga (%)</label>
+                        <input type="number" class="form-control @error('bunga') is-invalid @enderror" id="bunga" name="bunga" step="0.01" placeholder="2 %" readonly>
+                        @error('bunga')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="total">Total</label>
+                        <input type="text" class="form-control @error('total') is-invalid @enderror" id="total" name="total" step="0.01" readonly>
+                        @error('total')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="viewNoTlp">Nomor Telepon</label>
-                    <input type="text" class="form-control" id="viewNoTlp" name="viewNoTlp" readonly>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
                 </div>
-                <div class="form-group">
-                    <label for="viewKeperluan">Keperluan</label>
-                    <textarea class="form-control" id="viewKeperluan" name="viewKeperluan" readonly></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="viewNominal">Nominal</label>
-                    <input type="text" class="form-control" id="viewNominal" name="viewNominal" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewTglPinjaman">Tanggal Pinjaman</label>
-                    <input type="text" class="form-control" id="viewTglPinjaman" name="viewTglPinjaman" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewTglPengembalian">Tanggal Pengembalian</label>
-                    <input type="text" class="form-control" id="viewTglPengembalian" name="viewTglPengembalian" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewBunga">Bunga</label>
-                    <input type="text" class="form-control" id="viewBunga" name="viewBunga" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewTotal">Total</label>
-                    <input type="text" class="form-control" id="viewTotal" name="viewTotal" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="viewPembayaranBulanan">Pembayaran Bulanan</label>
-                    <input type="text" class="form-control" id="viewPembayaranBulanan" name="viewPembayaranBulanan" readonly>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
+            </form>
         </div>
     </div>
-</div> -->
+</div>
+                       
                         @endsection

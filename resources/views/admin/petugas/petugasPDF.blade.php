@@ -62,7 +62,7 @@
             <p>Jl. Abadi, Kemloko, Kec. Nglegok, Kabupaten Blitar</p>
         </div>
     </div><hr>
-    <h3>Data Anggota</h3>
+    <h3 align="center">Data Petugas</h3>
     <table>
         <thead>
             <tr>
@@ -71,11 +71,12 @@
                 <th>Username</th>
                 <th>Nomer Telepon</th>
                 <th>alamat</th>     
+                <th>KTP</th>
             </tr>
         </thead>
         <tbody>
             @php $no = 1 @endphp
-            @foreach ($anggota as $a)
+            @foreach ($petugas as $a)
                                     
             <tr>
                 <td>{{$no++}}</td>
@@ -83,6 +84,7 @@
                 <td>{{$a->username}}</td>
                 <td>{{$a->no_tlp}}</td>
                 <td>{{$a->alamat}}</td>
+                <td>{{$a->KTP}}</td>
             </tr>
             @endforeach
         </tbody>

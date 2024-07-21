@@ -1,6 +1,7 @@
 @extends('layouts.app1')
 @section('konten')
 
+
     <div class="page-wrapper">
         <div class="page-content--bge5">
             <div class="container">
@@ -11,6 +12,11 @@
                                 <img src="{{asset('admin/images/icon/logo1.png')}}" alt="CoolAdmin" style="width: 100px; height: auto;">
                             </a>
                         </div>
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="login-form">
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf

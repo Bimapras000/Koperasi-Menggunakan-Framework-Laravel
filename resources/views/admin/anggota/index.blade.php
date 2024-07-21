@@ -10,7 +10,7 @@
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
                                         <form class="form-header" action="{{ url('admin/anggota') }}" method="GET">
-                                            <input class="au-input au-input--xl search-field" type="text" name="name" id="name" placeholder="Search for datas & reports..." />
+                                            <input class="au-input au-input--xl search-field" type="text" name="name" id="name" placeholder="" />
                                             <button class="au-btn--submit" type="submit">
                                                 <i class="zmdi zmdi-search"></i>
                                             </button>
@@ -30,7 +30,7 @@
 
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                     <a class="dropdown-item" href="{{ route('anggota.pdf') }}">PDF</a>
-                                                    <a class="dropdown-item" href="#">Excel</a>
+                                                    <a class="dropdown-item" href="{{ route('anggota.excel') }}">Excel</a>
                                                     
                                                 </div>
                                             </div>
@@ -145,6 +145,15 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
+                                    @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                     <div class="modal-body">
                                     <div class="form-group">
                                             <label for="name">Nama</label>

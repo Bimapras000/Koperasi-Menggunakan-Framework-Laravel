@@ -32,7 +32,27 @@
 
     <!-- Main CSS-->
     <link href="{{asset('admin/css/theme.css')}}" rel="stylesheet" media="all">
+<style>
+    .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
 
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+</style>
 </head>
 
 <body class="animsition">
@@ -58,10 +78,22 @@
     <script src="{{asset('admin/vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
     <script src="{{asset('admin/vendor/chartjs/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('admin/vendor/select2/select2.min.js')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
     </script>
 
     <!-- Main JS-->
     <script src="{{asset('admin/js/main.js')}}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var cleaveC = new Cleave('#nominal', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                delimiter: '.', 
+                numeralDecimalMark: ','
+            });
+        });
+    </script>
 
 </body>
 

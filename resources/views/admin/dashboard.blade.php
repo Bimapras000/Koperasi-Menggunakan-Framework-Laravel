@@ -82,7 +82,7 @@
                             <tr>
                                 <td>{{ $transaksi->tgl_setor }}</td>
                                 <td>{{ $transaksi->user_name }}</td>
-                                <td class="text-right">{{ number_format($transaksi->nominal, 2) }}</td>
+                                <td class="text-right">Rp. {{ number_format($transaksi->nominal, 2) }}</td>
 
                             </tr>
                         @endforeach
