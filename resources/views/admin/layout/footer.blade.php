@@ -123,7 +123,7 @@ function viewMemberDetails(userId) {
         const totalInput = document.getElementById('total');
 
         function calculateTotal() {
-            const nominal = parseFloat(nominalInput.value) || 0;
+            const nominal = parseFloat(nominalInput.value.replace(/\./g, '').replace(',', '.')) || 0;
             const tglPinjaman = new Date(tglPinjamanInput.value);
             const tglPengembalian = new Date(tglPengembalianInput.value);
 
@@ -137,14 +137,30 @@ function viewMemberDetails(userId) {
                 const total = nominal + totalBunga;
 
                 totalInput.value = total.toFixed(2);
+                cleaveTotal.setRawValue(total.toFixed(2));
             }
         }
 
         nominalInput.addEventListener('input', calculateTotal);
         tglPinjamanInput.addEventListener('change', calculateTotal);
         tglPengembalianInput.addEventListener('change', calculateTotal);
+
+        var cleaveC = new Cleave('#nominal', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            delimiter: '.',
+            numeralDecimalMark: ','
+        });
+
+        var cleaveTotal = new Cleave('#total', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand',
+            delimiter: '.',
+            numeralDecimalMark: ','
+        });
     });
 </script>
+
 
 <!-- <script>
     document.addEventListener('DOMContentLoaded', function() {

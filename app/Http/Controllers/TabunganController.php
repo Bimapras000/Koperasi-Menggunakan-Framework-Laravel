@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Setor;
 use App\Models\User;
 use App\Models\Tabungan;
+use App\Models\Peminjaman;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TabunganExport;
@@ -150,4 +151,46 @@ public function toggleTarik(Request $request)
     {
         return Excel::download(new TabunganExport, 'tabungan.xlsx');
     }
+
+    public function bayarCicilan(Request $request, $id) {
+        $tabungan = Tabungan::find($id);
+        if (!$tabungan) {
+            return redirect()->back()->with('error', 'Data tabungan tidak ditemukan.');
+        }
+    
+        $nominal = $request->input('nominal');
+        $komentar = $request->input('komentar');
+    
+        // Cari peminjaman yang belum lunas
+        $pinjaman = Peminjaman::where('users_id', $tabungan->users_id)
+                            ->where('status', 'belum lunas')
+                            ->first();
+    
+        if (!$pinjaman) {
+            return redirect()->back()->with('error', 'Tidak ada pinjaman yang belum lunas.');
+        }
+    
+        // Kurangi saldo tabungan
+        $tabungan->saldo -= $nominal;
+        $tabungan->save();
+    
+        // Kurangi nominal dari peminjaman
+        $pinjaman->total -= $nominal;
+        if ($pinjaman->total <= 0) {
+            $pinjaman->status = 'lunas';
+        }
+        $pinjaman->save();
+    
+        // Simpan log atau histori pembayaran cicilan
+        Peminjaman::create([
+            'tabungan_id' => $tabungan->id,
+            'pinjaman_id' => $pinjaman->id,
+            'nominal' => $nominal,
+            'komentar' => $komentar,
+        ]);
+    
+        return redirect()->back()->with('success', 'Cicilan berhasil dibayar.');
+    }
+    
+    
 }

@@ -12,6 +12,7 @@
                 </ul>
             </div>
         @endif
+        
         <div class="table-data__tool">
             <div class="table-data__tool-left">
                 <form class="form-header" action="" method="POST">
@@ -79,7 +80,7 @@
 <div class="modal fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
-            <form action="{{ url('admin/peminjaman/store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('user/peminjaman/store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="smallmodalLabel">Form Tambah Peminjaman</h5>
@@ -151,7 +152,11 @@
 </div>
 
 
-
+<script>
+    @if ($errors->any())
+        $('#smallmodal').modal('show');
+    @endif
+</script>
 
 
 @endsection

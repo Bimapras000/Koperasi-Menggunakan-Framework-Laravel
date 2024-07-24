@@ -107,6 +107,8 @@ Route::get('/tabungan/delete/{id}',[TabunganController::class, 'destroy']);
 Route::post('admin/tabungan/tarik/{id}', [TabunganController::class, 'tarikSaldo']);
 Route::get('/tabungan-pdf', [TabunganController::class, 'tabunganPDF'])->name('tabungan.pdf');
 Route::get('/export-excel', [TabunganController::class, 'exportExcel'])->name('tabungan.excel');
+Route::post('admin/tabungan/cicilan/{id}', [TabunganController::class, 'bayarCicilan'])->name('tabungan.cicilan');
+
 
 
 //route peminjaman

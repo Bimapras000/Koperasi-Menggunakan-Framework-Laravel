@@ -279,42 +279,40 @@ public function downloadInvoicePDF($id)
     }
 
     public function store1(Request $request)
-    {
-        $request->validate([
-            'keperluan' => 'required',
-            'tgl_pinjaman' => 'required|date',
-            'tgl_pengembalian' => 'required|date|after_or_equal:tgl_pinjaman',
-            'nominal' => 'required',
-        ]);
+{
+    $request->validate([
+        'keperluan' => 'required',
+        'tgl_pinjaman' => 'required|date',
+        'tgl_pengembalian' => 'required|date|after_or_equal:tgl_pinjaman',
+        'nominal' => 'required',
+    ]);
+
+    $user = Auth::user();
+    $existingLoan = Peminjaman::where('users_id', $user->id)
+                            ->where('status', 'Belum Lunas')
+                            ->first();
+
+    if ($existingLoan) {
+        return redirect()->back()->withInput()->withErrors(['error' => 'Anda tidak dapat melakukan pinjaman baru sebelum pinjaman sebelumnya lunas.']);
     
-        $nominal = str_replace(['.', ','], '', $request->nominal); // Hapus pemisah ribuan jika ada
-
-    $tglPinjaman = new \DateTime($request->tgl_pinjaman);
-    $tglPengembalian = new \DateTime($request->tgl_pengembalian);
-    $diff = $tglPinjaman->diff($tglPengembalian);
-    $diffMonths = $diff->m + ($diff->y * 12);
-
-    $bunga = 2; // Bunga 2% per bulan
-    $total = $nominal + ($nominal * ($bunga / 100) * $diffMonths);
-
-    
-        Peminjaman::create([
-            'users_id' => Auth::id(),
-            'alamat' => $request->alamat,
-            'no_tlp' => $request->no_tlp,
-            'keperluan' => $request->keperluan,
-            'nominal' => $nominal,
-            'tgl_pinjaman' => $request->tgl_pinjaman,
-            'tgl_pengembalian' => $request->tgl_pengembalian,
-            'bunga' => $bunga, 
-            'total' => $total,
-            'status' => 'Belum Lunas',
-            'konfirmasi' => Peminjaman::STATUS_PENDING,
-        ]);
-    
-
-        return redirect('user/peminjaman')->with('success', 'Peminjaman berhasil ditambahkan');
     }
+
+    Peminjaman::create([
+        'users_id' => $user->id,
+        'alamat' => $user->alamat,
+        'keperluan' => $request->keperluan,
+        'nominal' => $request->nominal,
+        'tgl_pinjaman' => $request->tgl_pinjaman,
+        'tgl_pengembalian' => $request->tgl_pengembalian,
+        'bunga' => 2, // Bunga 2% per bulan
+        'total' => $request->total,
+        'status' => 'Belum Lunas',
+        'konfirmasi' => Peminjaman::STATUS_PENDING, // Set status to pending
+    ]);
+
+    return redirect('user/peminjaman')->with('success', 'Peminjaman berhasil ditambahkan');
+}
+
 //     public function store1(Request $request)
 // {
 //     // Cek apakah pengguna memiliki peminjaman yang belum lunas

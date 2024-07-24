@@ -75,6 +75,9 @@
                                             <td>Rp {{ number_format($tabunga->saldo, 0, ',', '.') }}</td>
                                             <td>
                                                 <div class="table-data-feature">
+                                                    <button type="button" class="btn item" data-toggle="modal" data-target="#cicilanModal{{$tabunga->id}}" data-placement="top" title="Cicilan">
+                                                        <i class="zmdi zmdi-money"></i>
+                                                    </button>
                                                     <button type="button" class="btn item" data-toggle="modal" data-target="#editModal{{$tabunga->id}}" data-placement="top" title="Edit">
                                                         <i class="zmdi zmdi-edit"></i>
                                                     </button>
@@ -104,6 +107,41 @@
                                             </td>
                                             </tr>
                                             <tr class="spacer"></tr>
+                                            <!-- Modal Cicilan -->
+                                            <div class="modal fade" id="cicilanModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="cicilanModalLabel{{$tabunga->id}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cicilanModalLabel{{$tabunga->id}}">Bayar Cicilan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('tabungan.cicilan', $tabunga->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nominal{{$tabunga->id}}">Nominal</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Rp</span>
+                                </div>
+                                <input type="text" name="nominal" id="nominal{{$tabunga->id}}" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="komentar{{$tabunga->id}}">Komentar</label>
+                            <textarea name="komentar" id="komentar{{$tabunga->id}}" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Bayar Cicilan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
                                             <!-- Modal Edit Tabungan -->
 <div class="modal fade" id="editModal{{$tabunga->id}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$tabunga->id}}" aria-hidden="true">
     <div class="modal-dialog" role="document">
