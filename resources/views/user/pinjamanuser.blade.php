@@ -98,50 +98,50 @@
                     </div>
                 @endif
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="keperluan">Keperluan</label>
-                        <textarea type="text" class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" required></textarea>
-                        @error('keperluan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="nominal">Nominal</label>
-                        <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" step="0.01" required>
-                        @error('nominal')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="tgl_pinjaman">Tanggal Peminjaman</label>
-                        <input type="date" class="form-control @error('tgl_pinjaman') is-invalid @enderror" id="tgl_pinjaman" name="tgl_pinjaman" required>
-                        @error('tgl_pinjaman')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="tgl_pengembalian">Tanggal Pengembalian</label>
-                        <input type="date" class="form-control @error('tgl_pengembalian') is-invalid @enderror" id="tgl_pengembalian" name="tgl_pengembalian" required>
-                        @error('tgl_pengembalian')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="bunga">Bunga (%)</label>
-                        <input type="number" class="form-control @error('bunga') is-invalid @enderror" id="bunga" name="bunga" step="0.01" placeholder="2 %" readonly>
-                        @error('bunga')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="total">Total</label>
-                        <input type="text" class="form-control @error('total') is-invalid @enderror" id="total" name="total" step="0.01" readonly>
-                        @error('total')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                </div>
+    <div class="form-group">
+        <label for="keperluan">Keperluan</label>
+        <textarea type="text" class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" required></textarea>
+        @error('keperluan')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group">
+        <label for="nominal">Nominal</label>
+        <input type="text" class="form-control @error('nominal') is-invalid @enderror" id="nominal" name="nominal" step="0.01" required>
+        @error('nominal')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group">
+        <label for="tgl_pinjaman">Tanggal Peminjaman</label>
+        <input type="date" class="form-control @error('tgl_pinjaman') is-invalid @enderror" id="tgl_pinjaman" name="tgl_pinjaman" required>
+        @error('tgl_pinjaman')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group">
+        <label for="tgl_pengembalian">Tanggal Pengembalian</label>
+        <input type="date" class="form-control @error('tgl_pengembalian') is-invalid @enderror" id="tgl_pengembalian" name="tgl_pengembalian" required>
+        @error('tgl_pengembalian')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group">
+        <label for="bunga">Bunga (%)</label>
+        <input type="number" class="form-control @error('bunga') is-invalid @enderror" id="bunga" name="bunga" step="0.01" placeholder="2 %" readonly>
+        @error('bunga')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="form-group">
+        <label for="total">Total</label>
+        <input type="text" class="form-control @error('total') is-invalid @enderror" id="total" name="total" step="0.01" readonly>
+        @error('total')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
                     <button type="submit" name="submit" class="btn btn-primary">Simpan</button>

@@ -47,60 +47,50 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const nominalInput = document.getElementById('nominal');
-        const tglPinjamanInput = document.getElementById('tgl_pinjaman');
-        const tglPengembalianInput = document.getElementById('tgl_pengembalian');
-        const totalInput = document.getElementById('total');
+    const nominalInput = document.getElementById('nominal');
+    const tglPinjamanInput = document.getElementById('tgl_pinjaman');
+    const tglPengembalianInput = document.getElementById('tgl_pengembalian');
+    const totalInput = document.getElementById('total');
 
-        function calculateTotal() {
-            const nominal = parseFloat(nominalInput.value.replace(/\./g, '').replace(',', '.')) || 0;
-            const tglPinjaman = new Date(tglPinjamanInput.value);
-            const tglPengembalian = new Date(tglPengembalianInput.value);
+    function calculateTotal() {
+        const nominal = parseFloat(nominalInput.value.replace(/\./g, '').replace(',', '.')) || 0;
+        const tglPinjaman = new Date(tglPinjamanInput.value);
+        const tglPengembalian = new Date(tglPengembalianInput.value);
 
-            if (!isNaN(tglPinjaman) && !isNaN(tglPengembalian)) {
-                const timeDiff = Math.abs(tglPengembalian - tglPinjaman);
-                const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                const diffMonths = Math.ceil(diffDays / 30); // Perhitungan kasar jumlah bulan
+        if (!isNaN(tglPinjaman) && !isNaN(tglPengembalian)) {
+            const timeDiff = Math.abs(tglPengembalian - tglPinjaman);
+            const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            const diffMonths = Math.ceil(diffDays / 30); // Perhitungan kasar jumlah bulan
 
-                const bungaPerBulan = nominal * 0.02;
-                const totalBunga = bungaPerBulan * diffMonths;
-                const total = nominal + totalBunga;
+            const bungaPerBulan = nominal * 0.02;
+            const totalBunga = bungaPerBulan * diffMonths;
+            const total = nominal + totalBunga;
 
-                totalInput.value = total.toFixed(2);
-                cleaveTotal.setRawValue(total.toFixed(2));
-            }
+            cleaveTotal.setRawValue(total.toFixed(2));
         }
+    }
 
-        nominalInput.addEventListener('input', calculateTotal);
-        tglPinjamanInput.addEventListener('change', calculateTotal);
-        tglPengembalianInput.addEventListener('change', calculateTotal);
+    nominalInput.addEventListener('input', calculateTotal);
+    tglPinjamanInput.addEventListener('change', calculateTotal);
+    tglPengembalianInput.addEventListener('change', calculateTotal);
 
-        var cleaveC = new Cleave('#nominal', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            delimiter: '.',
-            numeralDecimalMark: ','
-        });
-
-        var cleaveTotal = new Cleave('#total', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            delimiter: '.',
-            numeralDecimalMark: ','
-        });
+    var cleaveC = new Cleave('#nominal', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        delimiter: '.',
+        numeralDecimalMark: ','
     });
+
+    var cleaveTotal = new Cleave('#total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        delimiter: '.',
+        numeralDecimalMark: ','
+    });
+});
+
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var cleaveC = new Cleave('#nominal', {
-            numeral: true,
-            numeralThousandsGroupStyle: 'thousand',
-            delimiter: '.',
-            numeralDecimalMark: ','
-        });
-    });
-</script>
 <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         $('#detailModal').on('show.bs.modal', function (event) {

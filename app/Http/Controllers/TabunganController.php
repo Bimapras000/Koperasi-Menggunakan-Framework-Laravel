@@ -158,7 +158,7 @@ public function toggleTarik(Request $request)
             return redirect()->back()->with('error', 'Data tabungan tidak ditemukan.');
         }
     
-        $nominal = $request->input('nominal');
+        $nominal = floatval(str_replace(['.', ','], ['', '.'], $request->input('nominal')));
         $komentar = $request->input('komentar');
     
         // Cari peminjaman yang belum lunas
@@ -177,7 +177,7 @@ public function toggleTarik(Request $request)
         // Kurangi nominal dari peminjaman
         $pinjaman->total -= $nominal;
         if ($pinjaman->total <= 0) {
-            $pinjaman->status = 'lunas';
+            $pinjaman->status = 'Lunas';
         }
         $pinjaman->save();
     
@@ -191,6 +191,4 @@ public function toggleTarik(Request $request)
     
         return redirect()->back()->with('success', 'Cicilan berhasil dibayar.');
     }
-    
-    
-}
+}    
